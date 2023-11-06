@@ -9,7 +9,7 @@ An API for trading and buying products from one another. Assignment for course M
 - Django (if not running with pyenv)
 
 ### Cloning the repo
-Create a folder, for example `M7011E-project`, then enter it and run:
+Create a folder, for example `M7011E`, then enter it and run:
 ```bash
 git init
 git clone https://github.com/casperlundberg/trading_api.git
