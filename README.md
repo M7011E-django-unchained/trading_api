@@ -41,10 +41,10 @@ python -m venv .env
 .env\Scripts\activate.bat
 ```
 
-**For linux/unix users** Enter the project root folder `trading_api` and run:
+*Not tested!! * **For linux/unix users** Enter the project root folder `trading_api` and run:
 ```bash
 python -m venv .env
-# Coming soon, not researched how-to yet
+source .virtenv/bin/activate
 ```
 
 #### Install Django on environment (if not on env, django needs to be installed globally)
