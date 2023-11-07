@@ -41,7 +41,7 @@ python -m venv .env
 .env\Scripts\activate.bat
 ```
 
-*Not tested!! * **For linux/unix users** Enter the project root folder `trading_api` and run:
+_Not tested!!_ **For linux/unix users** Enter the project root folder `trading_api` and run:
 ```bash
 python -m venv .env
 source .virtenv/bin/activate
