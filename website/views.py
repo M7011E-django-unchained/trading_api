@@ -30,14 +30,14 @@ def apiOverview(request):
 def auctionList(request):
     auctions = Auction.objects.all()
     serializer = AuctionDetailSerializer(auctions, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 
 @api_view(["GET"])
 def auctionDetail(request, id):
     auctions = Auction.objects.get(AuctionID=id)
     serializer = AuctionDetailSerializer(auctions, many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 
 @api_view(["POST"])
@@ -47,7 +47,7 @@ def auctionCreate(request):
     if serializer.is_valid():
         serializer.save()
 
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 
 @api_view(["POST"])
@@ -57,8 +57,9 @@ def auctionUpdate(request, id):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
 
 
 @api_view(["DELETE"])
@@ -66,21 +67,21 @@ def auctionDelete(request, id):
     auction = Auction.objects.get(AuctionID=id)
     auction.delete()
 
-    return Response("Auction with id:" + id + " deleted")
+    return Response("Auction with id:" + id + " deleted", status=200)
 
 
 @api_view(["GET"])
 def userList(request):
     users = Member.objects.all()
     serializer = MemberSerializer(users, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 
 @api_view(["GET"])
 def userDetail(request, id):
     user = Member.objects.get(UserID=id)
     serializer = MemberSerializer(user, many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 
 @api_view(["POST"])
@@ -89,5 +90,6 @@ def userCreate(request):
 
     if serializer.is_valid():
         serializer.save()
-
-    return Response(serializer.data)
+        return Response(serializer.data, status=200)
+    else:
+        return Response(status=400)
