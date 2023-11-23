@@ -10,7 +10,10 @@ from .models import *
 
 class AuctionSerializer(HyperlinkedModelSerializer):
     category = HyperlinkedRelatedField(
-        view_name="category_detail", read_only=True, lookup_field="name"
+        view_name="category_detail",
+        many=True,
+        lookup_field="name",
+        queryset=Category.objects.all(),
     )
 
     class Meta:
