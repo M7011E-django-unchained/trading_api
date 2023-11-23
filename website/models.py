@@ -36,6 +36,16 @@ class Category(models.Model):
         return self.name
 
 
+class SubCategory(models.Model):
+    name = models.SlugField(
+        max_length=45, null=False, unique=True, blank=False, allow_unicode=True
+    )
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Auction(models.Model):
     auctionID = models.AutoField(primary_key=True)
     title = models.CharField(max_length=45)
