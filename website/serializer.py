@@ -1,46 +1,34 @@
-from rest_framework.serializers import ModelSerializer, StringRelatedField
+from rest_framework.serializers import (
+    ModelSerializer,
+    StringRelatedField,
+    HyperlinkedModelSerializer,
+    HyperlinkedRelatedField,
+)
 
 from .models import *
 
 
-class MemberSerializer(ModelSerializer):
-    Username = StringRelatedField(many=False)
+class AuctionSerializer(HyperlinkedModelSerializer):
+    category = HyperlinkedRelatedField(
+        view_name="category_detail", read_only=True, lookup_field="name"
+    )
 
-    class Meta:
-        model = Member
-        fields = "__all__"
-
-
-class CategorySerializer(ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
-
-
-class AuctionDetailSerializer(ModelSerializer):
-    Category = StringRelatedField(many=True)
-
-    class Meta:
-        model = Auction
-        fields = "__all__"
-
-
-class AuctionWriteSerializer(ModelSerializer):
     class Meta:
         model = Auction
         fields = (
-            "Title",
-            "AuctionOwner",
-            "Description",
-            "ImagePath",
-            "Category",
-            "StartingPrice",
-            "BuyOutPrice",
-            "EndTime",
+            "auctionID",
+            "title",
+            "description",
+            "imagePath",
+            "category",
+            "startingPrice",
+            "buyOutPrice",
+            "startTime",
+            "endTime",
         )
 
 
-class ShipmentSerializer(ModelSerializer):
+class CategorySerializer(HyperlinkedModelSerializer):
     class Meta:
-        model = Shipment
-        fields = "__all__"
+        model = Category
+        fields = ("id", "name")

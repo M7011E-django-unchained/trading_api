@@ -6,20 +6,20 @@ from django.dispatch import receiver
 
 # Create your models here.
 class Member(models.Model):
-    Username = models.OneToOneField(
+    username = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
     )
-    ProfilePicPath = models.CharField(max_length=255, blank=True, null=True)
+    profilePicPath = models.ImageField(upload_to="profile", null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.Username.username
+        return self.username.username
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Member.objects.create(Username=instance)
+        Member.objects.create(username=instance)
 
 
 @receiver(post_save, sender=User)
@@ -28,52 +28,53 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Category(models.Model):
-    CategoryId = models.AutoField(primary_key=True)
-    Name = models.CharField(max_length=45, null=False, unique=True)
+    name = models.SlugField(
+        max_length=45, null=False, unique=True, blank=False, allow_unicode=True
+    )
 
     def __str__(self) -> str:
-        return self.Name
+        return self.name
 
 
 class Auction(models.Model):
-    AuctionID = models.AutoField(primary_key=True)
-    Title = models.CharField(max_length=45)
-    AuctionOwner = models.ForeignKey(
+    auctionID = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=45)
+    auctionOwner = models.ForeignKey(
         User, on_delete=models.CASCADE
     )  # cascade = delete listing when user is deleted
-    Description = models.CharField(max_length=255)
-    ImagePath = models.CharField(max_length=45)
-    Category = models.ManyToManyField(Category)
-    StartingPrice = models.DecimalField(max_digits=10, decimal_places=2)
-    BuyOutPrice = models.DecimalField(
+    description = models.CharField(max_length=255)
+    imagePath = models.ImageField(upload_to="profile", null=True, blank=True)
+    category = models.ManyToManyField(Category)
+    startingPrice = models.DecimalField(max_digits=10, decimal_places=2)
+    buyOutPrice = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
-    StartTime = models.DateTimeField(
+    startTime = models.DateTimeField(
         auto_now_add=True  # set time to now when object is created
     )
-    EndTime = models.DateTimeField()
-    WinnerID = models.ForeignKey(
+    endTime = models.DateTimeField()
+    winnerID = models.ForeignKey(
         User,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="WinnerID",
     )
-    Subscribed = models.ManyToManyField(User, related_name="SubscribedUser", blank=True)
+    subscribed = models.ManyToManyField(User, related_name="SubscribedUser", blank=True)
 
     def __str__(self) -> str:
-        return self.Title
+        return self.title
 
 
 class Shipment(models.Model):
-    ShipmentID = models.AutoField(primary_key=True)
-    Username = models.ForeignKey(User, on_delete=models.CASCADE)
-    AuctionID = models.OneToOneField(Auction, null=True, on_delete=models.SET_NULL)
-    BidAmount = models.DecimalField(max_digits=10, decimal_places=2)
-    Paid = models.BooleanField(default=False)
-    Shipped = models.BooleanField(default=False)
-    ShippingDetails = models.CharField(max_length=255)
-    Timestamp = models.DateTimeField(auto_now_add=True)
+    shipmentID = models.AutoField(primary_key=True)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    auctionID = models.OneToOneField(Auction, null=True, on_delete=models.SET_NULL)
+    bidAmount = models.DecimalField(max_digits=10, decimal_places=2)
+    paid = models.BooleanField(default=False)
+    shipped = models.BooleanField(default=False)
+    shippingDetails = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return "AuctionID: " + str(self.ShipmentID)
+        return "AuctionID: " + str(self.shipmentID)

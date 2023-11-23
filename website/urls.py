@@ -3,12 +3,16 @@ from . import views
 
 urlpatterns = [
     path("", views.apiOverview, name="api-overview"),
-    path("auction-list/", views.auctionList, name="auction-list"),
-    path("auction-detail/<str:id>/", views.auctionDetail, name="auction-detail"),
-    path("auction-create/", views.auctionCreate, name="auction-create"),
-    path("auction-update/<str:id>/", views.auctionUpdate, name="auction-update"),
-    path("auction-delete/<str:id>/", views.auctionDelete, name="auction-delete"),
-    path("user-list/", views.userList, name="user-list"),
-    path("user-detail/<str:id>/", views.userDetail, name="user-detail"),
-    path("user-create/", views.userCreate, name="user-create"),
+    path("getAuction/", views.AuctionList.as_view(), name="auction_list"),
+    path(
+        "getAuction/<str:auctionID>/",
+        views.AuctionDetail.as_view(),
+        name="auction_detail",
+    ),
+    path("getCategory/", views.CategoryList.as_view(), name="category_list"),
+    path(
+        "getCategory/<str:name>",
+        views.CategoryDetail.as_view(),
+        name="category_detail",
+    ),
 ]
