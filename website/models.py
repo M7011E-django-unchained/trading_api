@@ -6,20 +6,20 @@ from django.dispatch import receiver
 
 # Create your models here.
 class Member(models.Model):
-    username = models.OneToOneField(
+    userid = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
     )
     profilePicPath = models.ImageField(upload_to="profile", null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.username.username
+        return self.userid.username
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Member.objects.create(username=instance)
+        Member.objects.create(userid=instance)
 
 
 @receiver(post_save, sender=User)

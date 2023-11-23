@@ -1,14 +1,19 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    StringRelatedField,
     HyperlinkedModelSerializer,
     HyperlinkedRelatedField,
+    HyperlinkedIdentityField,
 )
 
 from .models import *
 
 
-class AuctionSerializer(HyperlinkedModelSerializer):
+class AuctionListSerializer(HyperlinkedModelSerializer):
+    auctionID = HyperlinkedIdentityField(
+        view_name="auction_detail",
+        lookup_field="auctionID",
+    )
+
     category = HyperlinkedRelatedField(
         view_name="category_detail",
         many=True,
@@ -21,8 +26,6 @@ class AuctionSerializer(HyperlinkedModelSerializer):
         fields = (
             "auctionID",
             "title",
-            "description",
-            "imagePath",
             "category",
             "startingPrice",
             "buyOutPrice",
@@ -31,7 +34,56 @@ class AuctionSerializer(HyperlinkedModelSerializer):
         )
 
 
+class AuctionDetailSerializer(ModelSerializer):
+    category = HyperlinkedRelatedField(
+        view_name="category_detail",
+        many=True,
+        lookup_field="name",
+        queryset=Category.objects.all(),
+    )
+
+    class Meta:
+        model = Auction
+        fields = "__all__"
+
+
 class CategorySerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Category
         fields = ("id", "name")
+
+
+class MemberDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ("profilePicPath",)
+
+
+class UserListSerializer(HyperlinkedModelSerializer):
+    username = HyperlinkedIdentityField(
+        view_name="member_detail",
+        lookup_field="username",
+    )
+
+    class Meta:
+        model = User
+        fields = ("username",)
+
+
+class UserDetailSerializer(ModelSerializer):
+    profilePicPath = MemberDetailSerializer(
+        source="memeber",
+        read_only=True,
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "date_joined",
+            "profilePicPath",
+        )

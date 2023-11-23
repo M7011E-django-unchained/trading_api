@@ -15,12 +15,12 @@ from .models import *
 
 class AuctionList(generics.ListCreateAPIView):
     queryset = Auction.objects.all()
-    serializer_class = AuctionSerializer
+    serializer_class = AuctionListSerializer
 
 
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Auction.objects.all()
-    serializer_class = AuctionSerializer
+    serializer_class = AuctionDetailSerializer
     lookup_field = "auctionID"
 
 
@@ -33,3 +33,14 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = "name"
+
+
+class MemberList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserListSerializer
+
+
+class MemberDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    lookup_field = "username"

@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path("getAuction/", views.AuctionList.as_view(), name="auction_list"),
     path(
-        "getAuction/<str:auctionID>/",
+        "getAuction/<int:auctionID>/",
         views.AuctionDetail.as_view(),
         name="auction_detail",
     ),
@@ -13,5 +13,9 @@ urlpatterns = [
         "getCategory/<str:name>",
         views.CategoryDetail.as_view(),
         name="category_detail",
+    ),
+    path("getMember/", views.MemberList.as_view(), name="member_list"),
+    path(
+        "getMember/<str:username>/", views.MemberDetail.as_view(), name="member_detail"
     ),
 ]
