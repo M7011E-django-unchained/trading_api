@@ -132,9 +132,14 @@ class CategorySerializer(HyperlinkedModelSerializer):
 
 
 class CategoryDetailSerializer(ModelSerializer):
+    auctions = HyperlinkedIdentityField(
+        view_name="category-auction-list",
+        lookup_field="name",
+    )
+
     class Meta:
         model = Category
-        fields = ("id", "name")
+        fields = ("id", "name", "auctions")
 
 
 class CategoryCreateSerializer(ModelSerializer):
@@ -144,8 +149,6 @@ class CategoryCreateSerializer(ModelSerializer):
 
 
 ## Member/User serializers
-
-
 class MemberDetailSerializer(ModelSerializer):
     class Meta:
         model = Member

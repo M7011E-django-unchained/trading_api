@@ -77,3 +77,11 @@ class MemberAuctionList(generics.ListAPIView):
     def get_queryset(self):
         username = self.kwargs["username"]
         return Auction.objects.filter(auctionOwner__username=username)
+
+
+class CategoryAuctionList(generics.ListAPIView):
+    serializer_class = AuctionListSerializer
+
+    def get_queryset(self):
+        name = self.kwargs["name"]
+        return Auction.objects.filter(category__name=name)
