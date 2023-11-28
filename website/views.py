@@ -25,6 +25,23 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "auctionID"
 
 
+## Subcategory views
+class SubcategoryList(ModelViewSet):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategoryListSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return SubcategoryCreateSerializer
+        return self.serializer_class
+
+
+class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subcategory.objects.all()
+    serializer_class = SubcategoryDetailSerializer
+    lookup_field = "subcategory_name"
+
+
 ## Category views
 class CategoryList(ModelViewSet):
     queryset = Category.objects.all()
@@ -39,18 +56,6 @@ class CategoryList(ModelViewSet):
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategoryDetailSerializer
-    lookup_field = "name"
-
-
-## Subcategory views
-class SubcategoryList(generics.ListCreateAPIView):
-    queryset = SubCategory.objects.all()
-    serializer_class = SubcategorySerializer
-
-
-class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SubCategory.objects.all()
-    serializer_class = SubcategoryDetailSerializer
     lookup_field = "name"
 
 

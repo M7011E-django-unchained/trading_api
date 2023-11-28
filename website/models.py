@@ -36,16 +36,20 @@ class Category(models.Model):
         return self.name
 
 
-class SubCategory(models.Model):
-    name = models.SlugField(
-        max_length=45, null=False, unique=True, blank=False, allow_unicode=True
-    )
+class Subcategory(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="subcategories"
+        Category, on_delete=models.CASCADE, related_name="parent_category"
+    )
+    subcategory_name = models.SlugField(
+        max_length=45,
+        null=False,
+        unique=True,
+        blank=False,
+        allow_unicode=True,
     )
 
     def __str__(self) -> str:
-        return self.name
+        return self.subcategory_name
 
 
 class Auction(models.Model):
@@ -56,7 +60,7 @@ class Auction(models.Model):
     )  # cascade = delete listing when user is deleted
     description = models.CharField(max_length=255)
     imagePath = models.ImageField(upload_to="profile", null=True, blank=True)
-    category = models.ManyToManyField(Category)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     startingPrice = models.DecimalField(max_digits=10, decimal_places=2)
     buyOutPrice = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True

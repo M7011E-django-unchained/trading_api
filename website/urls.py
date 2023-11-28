@@ -14,17 +14,17 @@ urlpatterns = [
         name="category-list",
     ),
     path(
-        "getCategory/<str:name>",
+        "getCategory/<slug:name>",
         views.CategoryDetail.as_view(),
         name="category-detail",
     ),
     path(
         "getSubcategory/",
-        views.SubcategoryList.as_view(),
+        views.SubcategoryList.as_view({"get": "list", "post": "create"}),
         name="subcategory-list",
     ),
     path(
-        "getSubcategory/<str:name>",
+        "getSubategory/<slug:subcategory_name>",
         views.SubcategoryDetail.as_view(),
         name="subcategory-detail",
     ),
