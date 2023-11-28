@@ -13,6 +13,7 @@ from .models import *
 # Create your views here.
 
 
+## Auction views
 class AuctionList(generics.ListCreateAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
@@ -24,6 +25,7 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "auctionID"
 
 
+## Category views
 class CategoryList(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -40,6 +42,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "name"
 
 
+## Subcategory views
 class SubcategoryList(generics.ListCreateAPIView):
     queryset = SubCategory.objects.all()
     serializer_class = SubcategorySerializer
@@ -47,10 +50,11 @@ class SubcategoryList(generics.ListCreateAPIView):
 
 class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubCategory.objects.all()
-    serializer_class = SubcategorySerializer
-    lookup_field = "id"
+    serializer_class = SubcategoryDetailSerializer
+    lookup_field = "name"
 
 
+## Member views
 class MemberList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer

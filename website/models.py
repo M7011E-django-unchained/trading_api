@@ -40,7 +40,9 @@ class SubCategory(models.Model):
     name = models.SlugField(
         max_length=45, null=False, unique=True, blank=False, allow_unicode=True
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="subcategories"
+    )
 
     def __str__(self) -> str:
         return self.name

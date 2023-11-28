@@ -19,12 +19,12 @@ urlpatterns = [
         name="category-detail",
     ),
     path(
-        "getSubCategory/",
+        "getSubcategory/",
         views.SubcategoryList.as_view(),
         name="subcategory-list",
     ),
     path(
-        "getSubCategory/<int:id>",
+        "getSubcategory/<str:name>",
         views.SubcategoryDetail.as_view(),
         name="subcategory-detail",
     ),

@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     HyperlinkedRelatedField,
     HyperlinkedIdentityField,
+    SerializerMethodField,
 )
 
 from .models import *
@@ -70,6 +71,47 @@ class AuctionDetailSerializer(ModelSerializer):
         fields = "__all__"
 
 
+## Subcategory serializers
+class SubcategoryListByCategorySerializer(HyperlinkedModelSerializer):
+    name = HyperlinkedIdentityField(
+        view_name="subcategory-detail",
+        lookup_field="name",
+    )
+
+    class Meta:
+        model = SubCategory
+        fields = "__all__"
+
+
+class SubcategorySerializer(HyperlinkedModelSerializer):
+    name = HyperlinkedIdentityField(
+        view_name="subcategory-detail",
+        lookup_field="name",
+    )
+
+    category = HyperlinkedRelatedField(
+        view_name="category-detail",
+        lookup_field="name",
+        queryset=Category.objects.all(),
+    )
+
+    class Meta:
+        model = SubCategory
+        fields = ("id", "name", "category")
+
+
+class SubcategoryDetailSerializer(ModelSerializer):
+    category = HyperlinkedRelatedField(
+        view_name="category-detail",
+        lookup_field="name",
+        queryset=Category.objects.all(),
+    )
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
 ## Category serializers
 class CategorySerializer(HyperlinkedModelSerializer):
     name = HyperlinkedIdentityField(
@@ -82,36 +124,30 @@ class CategorySerializer(HyperlinkedModelSerializer):
         fields = ("id", "name")
 
 
+class SubcategoryFromCategorySerializer(HyperlinkedModelSerializer):
+    name = HyperlinkedIdentityField(
+        view_name="subcategory-detail",
+        lookup_field="name",
+    )
+
+    class Meta:
+        model = SubCategory
+        fields = ("name",)
+
+
 class CategoryDetailSerializer(ModelSerializer):
+    # TODO add subcategory list
+    subcategories = SubcategoryFromCategorySerializer(many=True)
+
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ("id", "name", "subcategories")
 
 
 class CategoryCreateSerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = ("name",)
-
-
-## Subcategory serializers
-
-
-class SubcategorySerializer(HyperlinkedModelSerializer):
-    id = HyperlinkedIdentityField(
-        view_name="subcategory-detail",
-        lookup_field="id",
-    )
-
-    category = HyperlinkedRelatedField(
-        view_name="category-detail",
-        lookup_field="name",
-        queryset=Category.objects.all(),
-    )
-
-    class Meta:
-        model = SubCategory
-        fields = ("id", "name", "category")
 
 
 ## Member/User serializers
