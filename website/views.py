@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.viewsets import ModelViewSet
 from .serializer import *
 from .models import *
 
@@ -24,15 +24,31 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "auctionID"
 
 
-class CategoryList(generics.ListCreateAPIView):
+class CategoryList(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return CategoryCreateSerializer
+        return self.serializer_class
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    serializer_class = CategoryDetailSerializer
     lookup_field = "name"
+
+
+class SubcategoryList(generics.ListCreateAPIView):
+    queryset = SubCategory.objects.all()
+    serializer_class = SubcategorySerializer
+
+
+class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SubCategory.objects.all()
+    serializer_class = SubcategorySerializer
+    lookup_field = "id"
 
 
 class MemberList(generics.ListAPIView):

@@ -7,18 +7,26 @@ from rest_framework.serializers import (
 
 from .models import *
 
+## Auction serializers
+
 
 class AuctionListSerializer(HyperlinkedModelSerializer):
     auctionID = HyperlinkedIdentityField(
-        view_name="auction_detail",
+        view_name="auction-detail",
         lookup_field="auctionID",
     )
 
     category = HyperlinkedRelatedField(
-        view_name="category_detail",
+        view_name="category-detail",
         many=True,
         lookup_field="name",
         queryset=Category.objects.all(),
+    )
+
+    auctionOwner = HyperlinkedRelatedField(
+        view_name="member-detail",
+        lookup_field="username",
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -26,6 +34,8 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
         fields = (
             "auctionID",
             "title",
+            "auctionOwner",
+            "description",
             "category",
             "startingPrice",
             "buyOutPrice",
@@ -36,10 +46,23 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
 
 class AuctionDetailSerializer(ModelSerializer):
     category = HyperlinkedRelatedField(
-        view_name="category_detail",
+        view_name="category-detail",
         many=True,
         lookup_field="name",
         queryset=Category.objects.all(),
+    )
+
+    auctionOwner = HyperlinkedRelatedField(
+        view_name="member-detail",
+        lookup_field="username",
+        queryset=User.objects.all(),
+    )
+
+    subscribed = HyperlinkedRelatedField(
+        view_name="member-detail",
+        lookup_field="username",
+        many=True,
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -47,10 +70,51 @@ class AuctionDetailSerializer(ModelSerializer):
         fields = "__all__"
 
 
+## Category serializers
 class CategorySerializer(HyperlinkedModelSerializer):
+    name = HyperlinkedIdentityField(
+        view_name="category-detail",
+        lookup_field="name",
+    )
+
     class Meta:
         model = Category
         fields = ("id", "name")
+
+
+class CategoryDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
+class CategoryCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("name",)
+
+
+## Subcategory serializers
+
+
+class SubcategorySerializer(HyperlinkedModelSerializer):
+    id = HyperlinkedIdentityField(
+        view_name="subcategory-detail",
+        lookup_field="id",
+    )
+
+    category = HyperlinkedRelatedField(
+        view_name="category-detail",
+        lookup_field="name",
+        queryset=Category.objects.all(),
+    )
+
+    class Meta:
+        model = SubCategory
+        fields = ("id", "name", "category")
+
+
+## Member/User serializers
 
 
 class MemberDetailSerializer(ModelSerializer):
@@ -61,7 +125,7 @@ class MemberDetailSerializer(ModelSerializer):
 
 class UserListSerializer(HyperlinkedModelSerializer):
     username = HyperlinkedIdentityField(
-        view_name="member_detail",
+        view_name="member-detail",
         lookup_field="username",
     )
 
