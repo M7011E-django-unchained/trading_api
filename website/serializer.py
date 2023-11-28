@@ -136,7 +136,6 @@ class SubcategoryFromCategorySerializer(HyperlinkedModelSerializer):
 
 
 class CategoryDetailSerializer(ModelSerializer):
-    # TODO add subcategory list
     subcategories = SubcategoryFromCategorySerializer(many=True)
 
     class Meta:
