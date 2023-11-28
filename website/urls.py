@@ -28,8 +28,17 @@ urlpatterns = [
         views.SubcategoryDetail.as_view(),
         name="subcategory-detail",
     ),
-    path("getMember/", views.MemberList.as_view(), name="member-list"),
+    path(
+        "getMember/",
+        views.MemberList.as_view(),
+        name="member-list",
+    ),
     path(
         "getMember/<str:username>/", views.MemberDetail.as_view(), name="member-detail"
+    ),
+    path(
+        "getAuctions/<str:username>",
+        views.MemberAuctionList.as_view(),
+        name="member-auction-list",
     ),
 ]

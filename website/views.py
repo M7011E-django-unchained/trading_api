@@ -64,3 +64,11 @@ class MemberDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
     lookup_field = "username"
+
+
+class MemberAuctionList(generics.ListAPIView):
+    serializer_class = AuctionListSerializer
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        return Auction.objects.filter(auctionOwner__username=username)

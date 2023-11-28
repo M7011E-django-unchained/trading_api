@@ -176,6 +176,11 @@ class UserDetailSerializer(ModelSerializer):
         read_only=True,
     )
 
+    auctions = HyperlinkedIdentityField(
+        view_name="member-auction-list",
+        lookup_field="username",
+    )
+
     class Meta:
         model = User
         fields = (
@@ -186,4 +191,5 @@ class UserDetailSerializer(ModelSerializer):
             "email",
             "date_joined",
             "profilePicPath",
+            "auctions",
         )
