@@ -72,7 +72,7 @@ class UserListSerializer(HyperlinkedModelSerializer):
 
 class UserDetailSerializer(ModelSerializer):
     profilePicPath = MemberDetailSerializer(
-        source="memeber",
+        source="member",
         read_only=True,
     )
 
