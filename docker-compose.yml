@@ -1,0 +1,12 @@
+version: '1'
+services:
+  web:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    container_name: django_trading_api
+    restart: always
+    ports:
+      - 8000:8000
+#    command: bash -c /usr/src/app/start.sh
+#    env_file: .env
