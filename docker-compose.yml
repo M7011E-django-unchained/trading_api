@@ -1,10 +1,8 @@
 version: '1'
 services:
   web:
-    build: .
-    volumes:
-      - .:/usr/src/app
-    container_name: django_trading_api
+    image: trading_api_web
+    container_name: trading_api_web
     restart: always
     ports:
       - 8000:8000
