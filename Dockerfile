@@ -14,5 +14,5 @@ RUN pip install -r requirements.txt
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8000
 CMD [ "python", "manage.py", "runserver" ]
