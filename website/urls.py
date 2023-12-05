@@ -44,6 +44,7 @@ urlpatterns = [
         name="member-list",
     ),
     path(
-        "getMember/<str:username>/", views.MemberDetail.as_view(), name="member-detail"
+        "getMember/<str:username>/", views.MemberDetail.as_view(),
+        name="member-detail"
     ),
 ]
