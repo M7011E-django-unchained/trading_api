@@ -12,7 +12,7 @@ An API for trading and buying products from one another. Assignment for course M
 Create a folder, for example `M7011E`, then enter it and run:
 ```bash
 git init
-git clone https://github.com/casperlundberg/trading_api.git
+git clone https://github.com/M7011E-django-unchained/trading_api
 ```
 in the terminal.
 
@@ -47,10 +47,10 @@ python -m venv .env
 source .virtenv/bin/activate
 ```
 
-#### Install Django on environment (if not on env, django needs to be installed globally)
+#### Install required packages on environment (if not on env, packages needs to be installed globally)
 Just run:
 ```cmd
-pip install django
+pip install -r requirements.txt
 ```
 
 in the project root folder and check that the installation was correct with:
