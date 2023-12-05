@@ -1,19 +1,23 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-
 from rest_framework import generics
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from .serializer import *
-from .models import *
+from .serializer import (AuctionListSerializer,
+                         AuctionDetailSerializer,
+                         CategorySerializer,
+                         CategoryCreateSerializer,
+                         CategoryDetailSerializer,
+                         SubcategoryListSerializer,
+                         SubcategoryCreateSerializer,
+                         SubcategoryDetailSerializer,
+                         UserListSerializer,
+                         UserDetailSerializer)
+
+from .models import Auction, Category, Subcategory
+from django.contrib.auth.models import User
 
 # Create your views here.
 
 
-## Auction views
+# Auction views
 class AuctionList(generics.ListCreateAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
@@ -25,7 +29,7 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "auctionID"
 
 
-## Subcategory views
+# Subcategory views
 class SubcategoryList(ModelViewSet):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
@@ -42,7 +46,7 @@ class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "subcategory_name"
 
 
-## Category views
+# Category views
 class CategoryList(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -59,7 +63,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "name"
 
 
-## Member views
+# Member views
 class MemberList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer

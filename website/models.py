@@ -10,7 +10,8 @@ class Member(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    profilePicPath = models.ImageField(upload_to="profile", null=True, blank=True)
+    profilePicPath = models.ImageField(
+        upload_to="profile", null=True, blank=True)
 
     def __str__(self) -> str:
         return self.userid.username
@@ -60,7 +61,8 @@ class Auction(models.Model):
     )  # cascade = delete listing when user is deleted
     description = models.CharField(max_length=255)
     imagePath = models.ImageField(upload_to="profile", null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True)
     startingPrice = models.DecimalField(max_digits=10, decimal_places=2)
     buyOutPrice = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
@@ -76,7 +78,8 @@ class Auction(models.Model):
         on_delete=models.SET_NULL,
         related_name="WinnerID",
     )
-    subscribed = models.ManyToManyField(User, related_name="SubscribedUser", blank=True)
+    subscribed = models.ManyToManyField(
+        User, related_name="SubscribedUser", blank=True)
 
     def __str__(self) -> str:
         return self.title
@@ -85,7 +88,8 @@ class Auction(models.Model):
 class Shipment(models.Model):
     shipmentID = models.AutoField(primary_key=True)
     username = models.ForeignKey(User, on_delete=models.CASCADE)
-    auctionID = models.OneToOneField(Auction, null=True, on_delete=models.SET_NULL)
+    auctionID = models.OneToOneField(
+        Auction, null=True, on_delete=models.SET_NULL)
     bidAmount = models.DecimalField(max_digits=10, decimal_places=2)
     paid = models.BooleanField(default=False)
     shipped = models.BooleanField(default=False)

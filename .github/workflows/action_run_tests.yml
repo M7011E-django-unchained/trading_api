@@ -1,0 +1,19 @@
+name: Run Flake8 Linting and Unit Tests
+on: push
+jobs:
+  execute_tests:
+    name: Prepare and Run Flake8 Linting and Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update
+        run: sudo apt update
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install pip
+        run: sudo apt install python3-pip
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Execute linting and tests
+        env:
+          DJANGO_SETTINGS_MODULE: trading_api.settings
+        run: flake8 && python manage.py test

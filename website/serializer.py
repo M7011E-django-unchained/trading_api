@@ -3,12 +3,11 @@ from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     HyperlinkedRelatedField,
     HyperlinkedIdentityField,
-    SerializerMethodField,
 )
+from django.contrib.auth.models import User
+from .models import Member, Auction, Category, Subcategory
 
-from .models import *
-
-## Auction serializers
+# Auction serializers
 
 
 class AuctionListSerializer(HyperlinkedModelSerializer):
@@ -47,7 +46,7 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
 class AuctionDetailSerializer(ModelSerializer):
     category = HyperlinkedRelatedField(
         view_name="category-detail",
-        many=True,
+        many=False,
         lookup_field="name",
         queryset=Category.objects.all(),
     )
@@ -70,7 +69,7 @@ class AuctionDetailSerializer(ModelSerializer):
         fields = "__all__"
 
 
-## Subcategory serializers
+# Subcategory serializers
 class SubcategoryListSerializer(HyperlinkedModelSerializer):
     subcategory_name = HyperlinkedIdentityField(
         view_name="subcategory-detail",
@@ -117,14 +116,15 @@ class SubcategoryFromCategory(HyperlinkedModelSerializer):
         fields = ("subcategory_name",)
 
 
-## Category serializers
+# Category serializers
 class CategorySerializer(HyperlinkedModelSerializer):
     name = HyperlinkedIdentityField(
         view_name="category-detail",
         lookup_field="name",
     )
 
-    subcategories = SubcategoryFromCategory(source="parent_category", many=True)
+    subcategories = SubcategoryFromCategory(
+        source="parent_category", many=True)
 
     class Meta:
         model = Category
@@ -148,7 +148,7 @@ class CategoryCreateSerializer(ModelSerializer):
         fields = ("name",)
 
 
-## Member/User serializers
+# Member/User serializers
 class MemberDetailSerializer(ModelSerializer):
     class Meta:
         model = Member
