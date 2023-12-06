@@ -11,7 +11,7 @@ urlpatterns = [
     ),
     path(
         "getAuctionsByUser/<str:username>",
-        views.MemberAuctionList.as_view(),
+        views.MemberAuctionList.as_view({"get": "list"}),
         name="member-auction-list",
     ),
     path(
@@ -23,6 +23,11 @@ urlpatterns = [
         "getAuctionsBySubcategory/<slug:subcategory_name>",
         views.SubcategoryAuctionList.as_view(),
         name="subcategory-auction-list",
+    ),
+    path(
+        "deleteAuctionsByUser/<str:username>",
+        views.AuctionDeleteByUser.as_view(),
+        name="auction-delete-by-user",
     ),
     path(
         "getCategory/",

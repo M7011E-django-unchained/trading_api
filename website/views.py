@@ -1,3 +1,5 @@
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from .serializer import (AuctionListSerializer,
@@ -51,7 +53,17 @@ class SubcategoryAuctionList(generics.ListAPIView):
         return Auction.objects.filter(subcategory__subcategory_name=subcat)
 
 
+class AuctionDeleteByUser (generics.DestroyAPIView):
+    queryset = Auction.objects.all()
+    serializer_class = AuctionDetailSerializer
+
+    def get_queryset(self):
+        username = self.kwargs["username"]
+        return Auction.objects.filter(auctionOwner__username=username)
+
 # Subcategory views
+
+
 class SubcategoryList(ModelViewSet):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
@@ -97,9 +109,17 @@ class MemberDetail(generics.RetrieveAPIView):
     lookup_field = "username"
 
 
-class MemberAuctionList(generics.ListAPIView):
+class MemberAuctionList(ModelViewSet):
+    queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
 
     def get_queryset(self):
         username = self.kwargs["username"]
         return Auction.objects.filter(auctionOwner__username=username)
+
+    def delete(self, request, *args, **kwargs):
+        username = self.kwargs["username"]
+        resp_data = Auction.objects.filter(
+            auctionOwner__username=username).delete()
+        print(resp_data)
+        return Response(resp_data, status=status.HTTP_204_NO_CONTENT)
