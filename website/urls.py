@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("getAuction/", views.AuctionList.as_view(), name="auction-list"),
+    path("getAuction/", views.AuctionList.as_view(
+        {"get": "list", "post": "create"}), name="auction-list"),
     path(
         "getAuction/<int:auctionID>/",
         views.AuctionDetail.as_view(),
@@ -17,6 +18,11 @@ urlpatterns = [
         "getAuctionsByCategory/<slug:name>",
         views.CategoryAuctionList.as_view(),
         name="category-auction-list",
+    ),
+    path(
+        "getAuctionsBySubcategory/<slug:subcategory_name>",
+        views.SubcategoryAuctionList.as_view(),
+        name="subcategory-auction-list",
     ),
     path(
         "getCategory/",

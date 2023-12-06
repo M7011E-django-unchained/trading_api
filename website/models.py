@@ -63,6 +63,8 @@ class Auction(models.Model):
     imagePath = models.ImageField(upload_to="profile", null=True, blank=True)
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True)
+    subcategory = models.ForeignKey(
+        Subcategory, on_delete=models.SET_NULL, null=True)
     startingPrice = models.DecimalField(max_digits=10, decimal_places=2)
     buyOutPrice = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True

@@ -19,7 +19,14 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
     category = HyperlinkedRelatedField(
         view_name="category-detail",
         lookup_field="name",
-        queryset=Category.objects.all(),
+        many=False,
+        queryset=Category.objects.filter(),
+    )
+
+    subcategory = HyperlinkedRelatedField(
+        view_name="subcategory-detail",
+        lookup_field="subcategory_name",
+        queryset=Subcategory.objects.all(),
     )
 
     auctionOwner = HyperlinkedRelatedField(
@@ -36,6 +43,32 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
             "auctionOwner",
             "description",
             "category",
+            "subcategory",
+            "startingPrice",
+            "buyOutPrice",
+            "startTime",
+            "endTime",
+        )
+
+
+class AuctionCreateSerializer(ModelSerializer):
+
+    def create(self, validated_data):
+        subcategory = validated_data.get("subcategory")
+        subcategory_object = Subcategory.objects.filter(
+            subcategory_name=subcategory).values("category")
+        category = Category.objects.filter(
+            id=subcategory_object[0]["category"])
+
+        return Auction.objects.create(**validated_data, category=category[0])
+
+    class Meta:
+        model = Auction
+        fields = (
+            "title",
+            "auctionOwner",
+            "description",
+            "subcategory",
             "startingPrice",
             "buyOutPrice",
             "startTime",
@@ -44,6 +77,13 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
 
 
 class AuctionDetailSerializer(ModelSerializer):
+    subcategory = HyperlinkedRelatedField(
+        view_name="subcategory-detail",
+        many=False,
+        lookup_field="subcategory_name",
+        queryset=Subcategory.objects.all(),
+    )
+
     category = HyperlinkedRelatedField(
         view_name="category-detail",
         many=False,
@@ -100,9 +140,14 @@ class SubcategoryDetailSerializer(ModelSerializer):
         queryset=Category.objects.all(),
     )
 
+    auctions = HyperlinkedIdentityField(
+        view_name="subcategory-auction-list",
+        lookup_field="subcategory_name",
+    )
+
     class Meta:
         model = Subcategory
-        fields = ("category", "subcategory_name")
+        fields = ("category", "subcategory_name", "auctions")
 
 
 class SubcategoryFromCategory(HyperlinkedModelSerializer):
