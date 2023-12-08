@@ -36,11 +36,20 @@ class UpdateUserTest(APITestCase):
             password='testpass123',
             email='test@example.com'
         )
-        self.client.force_authenticate(user=self.user)
         self.url = reverse('users:update')
 
     def test_retrieve_user(self):
         """Test retrieving the profile for logged in user."""
+        payload = {'username': 'testuser',
+                   'password': 'testpass123'}
+        response = self.client.post(
+            reverse('users:token_obtain_pair'), payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -48,13 +57,99 @@ class UpdateUserTest(APITestCase):
         self.assertEqual(response.data['username'], self.user.username)
 
     def test_update_user(self):
-        """Test updating the user profile for authenticated user."""
-        payload = {'email': 'newemail@example.com',
-                   'password': 'newpassword123'}
+        """Test updating the profile for logged in user."""
+        payload = {'username': 'testuser',
+                   'password': 'testpass123'}
+        response = self.client.post(
+            reverse('users:token_obtain_pair'), payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        token = response.data['access']
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+
+        payload = {'username': 'testuser',
+                   'password': 'testpass123',
+                   'email': 'newemail@test.com'
+                   }
 
         response = self.client.patch(self.url, payload)
 
         self.user.refresh_from_db()
-        self.assertEqual(self.user.email, payload['email'])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['email'], payload['email'])
         self.assertTrue(self.user.check_password(payload['password']))
+
+
+class CreateTokenTest(APITestCase):
+    """Test for the view Token."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass123',
+        )
+        self.url = reverse('users:token_obtain_pair')
+
+    def test_create_token(self):
+        payload = {'username': 'testuser',
+                   'password': 'testpass123'}
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+
+
+class RefreshTokenTest(APITestCase):
+    """Test for the view Token."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass123',
+        )
+        self.url = reverse('users:token_refresh')
+
+    def test_refresh_token(self):
+        payload = {'username': 'testuser',
+                   'password': 'testpass123'}
+        response = self.client.post(
+            reverse('users:token_obtain_pair'), payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        token = response.data['refresh']
+        payload = {'refresh': token}
+        response = self.client.post(self.url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+
+
+class VerifyTokenTest(APIClient):
+    """Test for the view Token."""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpass123',
+        )
+        self.url = reverse('users:token_verify')
+
+    def test_verify_token(self):
+        payload = {'username': 'testuser',
+                   'password': 'testpass123'}
+        response = self.client.post(
+            reverse('users:token_obtain_pair'), payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        token = response.data['access']
+        payload = {'token': token}
+        response = self.client.post(self.url, payload)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
