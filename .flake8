@@ -9,4 +9,4 @@ exclude =
   website/serializer/__init__.py
   website/tests/__init__.py
   website/views/__init__.py
-  website/urls/__init__.py
+  website/api_urls/__init__.py
