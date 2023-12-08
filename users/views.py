@@ -10,7 +10,7 @@ class RegisterUser(CreateAPIView):
 
 class UpdateUser(RetrieveDestroyAPIView):
     serializer_class = UserSerializer
-    authentication_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
