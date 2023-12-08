@@ -6,5 +6,5 @@ app_name = 'users'
 
 urlpatterns = [
     path('register/', views.RegisterUser.as_view(), name='register'),
-    # path('update/', views.ManageUserView.as_view(), name='update'),
+    path('update/', views.UpdateUser.as_view(), name='update'),
 ]
