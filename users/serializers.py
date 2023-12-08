@@ -7,7 +7,8 @@ class UserSerializer(ModelSerializer):
         model = get_user_model()
         fields = ['email', 'username', 'password']
         # TODO set min length later
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True},
+                        'email': {'required': True}}
 
         def create(self, validated_data):
             return get_user_model().objects.create_user(**validated_data)
