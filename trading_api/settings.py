@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "rest_framework",
+    "rest_framework_simplejwt",
     "website",
+    "users"
 ]
 
 MIDDLEWARE = [
@@ -103,6 +105,13 @@ DATABASES = {
 #     },
 # ]
 
+# jwt authentication
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

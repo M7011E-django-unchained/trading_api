@@ -16,6 +16,11 @@ class Member(models.Model):
         return self.userid.username
 
 
+User._meta.get_field('email')._unique = True
+User._meta.get_field('email').blank = False
+User._meta.get_field('email').null = False
+
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
