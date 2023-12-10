@@ -5,13 +5,24 @@ from website.serializer import (AuctionListSerializer,
                                 AuctionCreateSerializer,)
 
 from website.models import Auction
+from rest_framework.permissions import BasePermission
 
 # Auction views
+
+
+class AuctionPermission(BasePermission):
+
+    def has_permission(self, request, view):
+        if view.action == "list":
+            return True
+        elif view.action == "create":
+            return request.user.is_authenticated
 
 
 class AuctionList(ModelViewSet):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
+    permission_classes = (AuctionPermission,)
 
     def get_serializer_class(self):
         if self.action == "create":
