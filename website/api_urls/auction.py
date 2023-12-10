@@ -5,7 +5,6 @@ from website.views import (
     MemberAuctionList,
     CategoryAuctionList,
     SubcategoryAuctionList,
-    AuctionDeleteByUser,
 )
 
 urlpatterns = [
@@ -20,23 +19,19 @@ urlpatterns = [
         name="auction-detail",
     ),
     path(
-        "User/<str:username>",
+        "user/<str:username>",
         MemberAuctionList.as_view({"get": "list"}),
         name="member-auction-list",
     ),
     path(
-        "Category/<slug:name>",
+        "category/<slug:name>",
         CategoryAuctionList.as_view(),
         name="category-auction-list",
     ),
     path(
-        "Subcategory/<slug:subcategory_name>",
+        "subcategory/<slug:subcategory_name>",
         SubcategoryAuctionList.as_view(),
         name="subcategory-auction-list",
     ),
-    path(
-        "delete/User/<str:username>",
-        AuctionDeleteByUser.as_view(),
-        name="auction-delete-by-user",
-    ),
+
 ]
