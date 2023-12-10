@@ -53,6 +53,15 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
 
 class AuctionCreateSerializer(ModelSerializer):
 
+    def create(self, validated_data):
+        subcategory = validated_data.get("subcategory")
+        subcategory_object = Subcategory.objects.filter(
+            subcategory_name=subcategory).values("category")
+        category = Category.objects.filter(
+            id=subcategory_object[0]["category"])
+
+        return Auction.objects.create(**validated_data, category=category[0])
+
     class Meta:
         model = Auction
         fields = (
@@ -65,18 +74,6 @@ class AuctionCreateSerializer(ModelSerializer):
             "startTime",
             "endTime",
         )
-        read_only_fields = ("auctionOwner",)
-
-    def create(self, validated_data):
-        subcategory = validated_data.get("subcategory")
-        auctionOwner = self.context["request"].user
-        subcategory_object = Subcategory.objects.filter(
-            subcategory_name=subcategory).values("category")
-        category = Category.objects.filter(
-            id=subcategory_object[0]["category"])
-
-        return Auction.objects.create(**validated_data, category=category[0],
-                                      auctionOwner=auctionOwner)
 
 
 class AuctionDetailSerializer(ModelSerializer):
