@@ -4,7 +4,6 @@ import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from rest_framework.utils import json
 
 
 # Create your views here.
@@ -19,6 +18,7 @@ def create_bid(request):
         "bidder": data.get('bidder'),
         "bidderId": data.get('bidderId'),
         "bidAmount": data.get('bidAmount'),
+        "bidTime": datetime.datetime.now(),
     }
 
     # body_unicode = request.body.decode('utf-8')
@@ -29,14 +29,14 @@ def create_bid(request):
 
     # bid = json.loads(request.body)
 
-    url = f'http://localhost:5000/api/v1/createBid'
+    url = 'http://localhost:5000/api/v1/createBid'
     response = requests.post(url, json=bid)
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids(request):
-    url = f'http://localhost:5000/api/v1/getAllBids'
+    url = 'http://localhost:5000/api/v1/getAllBids'
     response = requests.get(url)
     data = response.json()
     return JsonResponse(data, safe=False)
@@ -57,7 +57,8 @@ def get_all_bids_by_bidder_id(request, id):
 
 
 def get_all_bids_by_auction_id_and_bidder_id(request, auctionId, bidderId):
-    url = f'http://localhost:5000/api/v1/getAllbidsByAuctionIdAndBidderId/{auctionId}/{bidderId}'
+    url = 'http://localhost:5000/api/v1/getAllbidsByAuctionIdAndBidderId/'
+    url += f'{auctionId}/{bidderId}'
     response = requests.get(url)
     data = response.json()
     return JsonResponse(data, safe=False)
