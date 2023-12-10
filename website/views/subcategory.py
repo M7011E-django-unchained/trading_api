@@ -18,6 +18,7 @@ class SubcategoryPermission(BasePermission):
 class SubcategoryList(ModelViewSet):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
+    permission_classes = [SubcategoryPermission]
 
     def get_serializer_class(self):
         if self.action == "create":
