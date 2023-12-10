@@ -1,9 +1,8 @@
 import datetime
 
-import pytz
 import requests
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
 
