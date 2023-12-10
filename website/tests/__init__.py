@@ -1,1 +1,1 @@
-from .test_auction import *
+from .test_model import TestModel
