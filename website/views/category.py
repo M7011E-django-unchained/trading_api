@@ -20,6 +20,7 @@ class CategoryPermission(BasePermission):
 class CategoryList(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [CategoryPermission]
 
     def get_serializer_class(self):
         if self.action == "create":
