@@ -30,7 +30,7 @@ def create_dummy_auctions():
             subcategory=Subcategory.objects.get(id=1),
             startingPrice=100 + i,
             buyOutPrice=200 + i,
-            endTime="2020-12-31T00:00:00Z",
+            endTime="2020-12-31T01:00:00+01:00",
         )
     for i in range(5):
         Auction.objects.create(
@@ -41,7 +41,7 @@ def create_dummy_auctions():
             subcategory=Subcategory.objects.get(id=2),
             startingPrice=100 + i,
             buyOutPrice=200 + i,
-            endTime="2020-12-31T00:00:00Z",
+            endTime="2020-12-31T01:00:00+01:00",
         )
 
 
