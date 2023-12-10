@@ -6,6 +6,7 @@ from website.views import (
     CategoryAuctionList,
     SubcategoryAuctionList,
     AuctionDeleteByUser,
+    bid,
 )
 
 urlpatterns = [
