@@ -18,6 +18,9 @@ def create_dummy_auctions():
     Subcategory.objects.create(
         category=Category.objects.get(id=1),
         subcategory_name="Car")
+    Subcategory.objects.create(
+        category=Category.objects.get(id=1),
+        subcategory_name="Motorcycle")
     Category.objects.create(name="Electronics")
     Subcategory.objects.create(category=Category.objects.get(id=2),
                                subcategory_name="Phone")
@@ -38,7 +41,7 @@ def create_dummy_auctions():
             title="Test Auction " + str(i),
             description="This is a test auction " + str(i),
             category=Category.objects.get(id=2),
-            subcategory=Subcategory.objects.get(id=2),
+            subcategory=Subcategory.objects.get(id=3),
             startingPrice=100 + i,
             buyOutPrice=200 + i,
             endTime="2020-12-31T01:00:00+01:00",

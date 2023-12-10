@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import BasePermission
 from website.serializer import (
     SubcategoryListSerializer,
     SubcategoryCreateSerializer,
@@ -7,9 +8,17 @@ from website.serializer import (
 from website.models import Subcategory
 
 
+class SubcategoryPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == "GET":
+            return True
+        return request.user.is_superuser or request.user.is_staff
+
+
 class SubcategoryList(ModelViewSet):
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryListSerializer
+    permission_classes = [SubcategoryPermission]
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -18,6 +27,7 @@ class SubcategoryList(ModelViewSet):
 
 
 class SubcategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [SubcategoryPermission]
     queryset = Subcategory.objects.all()
     serializer_class = SubcategoryDetailSerializer
     lookup_field = "subcategory_name"
