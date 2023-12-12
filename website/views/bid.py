@@ -1,10 +1,10 @@
 import datetime
-
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
+from website.models import Auction
 
 
 # Create your views here.
@@ -62,9 +62,14 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
     return JsonResponse(data, safe=False)
 
 
-def get_winnerby_auction_id(request, auction_id):
+def get_winner_by_auction_id(request, auction_id):
     url = f'http://localhost:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
-    response = requests.get(url)
+    # REAL CODE WHEN USER DATA AND AUCTION DATA ARE CREATED
+    # auction = Auction.objects.get(auctionID=auction_id)
+    # response = requests.get(url, json={"endTime": auction.endTime})
+
+    # PLACEHOLDER CODE TO TEST CONNECTION
+    response = requests.get(url, json={"endTime": "2023-12-12T08:07:08.049Z"})
     data = response.json()
     return JsonResponse(data, safe=False)
 

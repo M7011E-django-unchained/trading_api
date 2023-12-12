@@ -13,7 +13,7 @@ urlpatterns = [
          bid.get_all_bids_by_auction_id_and_bidder_id,
          name='get-all-bids-by-auction-id-and-bidder-id'),
 
-    path("getWinnerByAuctionId/<int:auction_id>", bid.get_winnerby_auction_id,
+    path("getWinnerByAuctionId/<int:auction_id>", bid.get_winner_by_auction_id,
          name='get-winner-by-auction-id'),
     path("updateOne/<str:_id>", bid.update_one_bid, name='update-one-bid'),
     path("deleteOne/<str:_id>", bid.delete_one_bid, name='delete-one-bid'),
