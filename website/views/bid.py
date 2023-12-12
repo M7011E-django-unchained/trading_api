@@ -65,7 +65,6 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
 def get_winner_by_auction_id(request, auction_id):
     url = f'http://localhost:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
     end_time = str(Auction.get_end_time(auction_id))[1:][:-1]
-    print(end_time)
     body = {
         "endTime": end_time
     }
