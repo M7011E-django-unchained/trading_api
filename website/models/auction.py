@@ -36,3 +36,7 @@ class Auction(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    @staticmethod
+    def get_end_time(auction_id):
+        return Auction.objects.get(auctionID=auction_id).endTime

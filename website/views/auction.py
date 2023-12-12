@@ -2,9 +2,10 @@ from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from website.serializer import (AuctionListSerializer,
                                 AuctionDetailSerializer,
-                                AuctionCreateSerializer,)
+                                AuctionCreateSerializer, )
 
 from website.models import Auction
+
 
 # Auction views
 
@@ -41,7 +42,7 @@ class SubcategoryAuctionList(generics.ListAPIView):
         return Auction.objects.filter(subcategory__subcategory_name=subcat)
 
 
-class AuctionDeleteByUser (generics.DestroyAPIView):
+class AuctionDeleteByUser(generics.DestroyAPIView):
     queryset = Auction.objects.all()
     serializer_class = AuctionDetailSerializer
 
