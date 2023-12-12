@@ -1,4 +1,4 @@
-import datetime
+import datetime, time
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -74,12 +74,23 @@ def get_winner_by_auction_id(request, auction_id):
     # auction_response = requests.get(auction_url)
     # auction = auction_response.json()
     # end_time = auction.get('endTime')
-    print(auction_id)
 
-    end_time = Auction.get_end_time(auction_id)
+    end_time = str(Auction.get_end_time(auction_id))[1:][:-1]
     print(end_time)
 
-    response = requests.get(url, json={"endTime": end_time})
+    # STRUCTURE OF end_time IN BODY
+    # {
+    #     "endTime": "2023-12-12T08:07:08.049Z"
+    # }
+
+    # dt = datetime.datetime.fromisoformat(end_time.replace('Z', '+00:00'))
+    # for_js = int(time.mktime(end_time.timetuple())) * 1000
+
+    body = {
+        "endTime": end_time
+    }
+
+    response = requests.get(url, json=body)
 
     # PLACEHOLDER CODE TO TEST CONNECTION
     # response = requests.get(url, json={"endTime": "2023-12-12T08:07:08.049Z"})
