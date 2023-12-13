@@ -1,1 +1,3 @@
-from .test_model import TestModel
+from .test_auction import *
+from .test_category import *
+from .test_subcategory import *
