@@ -10,12 +10,12 @@ from rest_framework.decorators import api_view, authentication_classes, \
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.utils import json
 from website.models import Auction
+from website.models import Member
 
 
 def bid_get_token_middleware(request):
     # THERE MUST BE A BETTER WAY TO DO THIS
     token = request.headers.get('token')
-    print(token)
     return {"authorization": f'Bearer {token}'}
 
 
@@ -24,10 +24,15 @@ def bid_get_token_middleware(request):
 @api_view(['POST'])
 def create_bid(request):
     data = json.loads(request.body)
+
+    auction_id = data.get('auctionId')
+    auction = Auction.objects.get(auctionID=auction_id)
+    user = User.objects.get(id=data.get('bidderId'))
+
     bid = {
-        "auctionId": data.get('auctionId'),
-        "bidder": data.get('bidder'),
-        "bidderId": data.get('bidderId'),
+        "auctionId": auction_id,
+        "bidder": user.username,
+        "bidderId": user.id,
         "bidAmount": data.get('bidAmount'),
         "bidTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -38,10 +43,7 @@ def create_bid(request):
     retrieved_data = response.json()
 
     if response.status_code == 201:
-        auction_id = bid.get('auctionId')
-        auction = Auction.objects.get(auctionID=auction_id)
-        auction.subscribers.add(
-            User.objects.get(username=data.get('bidder')))
+        auction.subscribed.add(user)
         auction.save()
 
     return JsonResponse(retrieved_data, safe=False)

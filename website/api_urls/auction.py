@@ -33,5 +33,7 @@ urlpatterns = [
         SubcategoryAuctionList.as_view(),
         name="subcategory-auction-list",
     ),
+    path("subscribe/<int:auctionID>", AuctionDetail.as_view(),
+         name="subscribe"),
 
 ]
