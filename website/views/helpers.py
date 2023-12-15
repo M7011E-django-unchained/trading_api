@@ -9,6 +9,9 @@ class IdempotencyException(APIException):
 
 
 def idempotent_check(request):
+    """We generate a hash from the request and check it against our cache.
+    If the hash already exists, then the request is a duplicate.
+    If not, the hash is added, and request is processed."""
     key = hashlib.blake2b(
         f"{request.user.id}, {request.path}, {request.data}".encode("utf-8")
     ).hexdigest()
