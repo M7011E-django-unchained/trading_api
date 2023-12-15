@@ -2,9 +2,21 @@ import datetime
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
+from rest_framework.authentication import SessionAuthentication, \
+    BasicAuthentication
+from rest_framework.decorators import api_view, authentication_classes, \
+    permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.utils import json
 from website.models import Auction
+
+
+def bid_get_token_middleware(request):
+    # THERE MUST BE A BETTER WAY TO DO THIS
+    token = request.headers.get('token')
+    print(token)
+    return {"authorization": f'Bearer {token}'}
 
 
 # Create your views here.
@@ -21,35 +33,44 @@ def create_bid(request):
     }
 
     url = 'http://localhost:5000/api/v1/createBid'
-    response = requests.post(url, json=bid)
-    data = response.json()
-    return JsonResponse(data, safe=False)
+    response = requests.post(url, json=bid,
+                             headers=bid_get_token_middleware(request))
+    retrieved_data = response.json()
+
+    if response.status_code == 201:
+        auction_id = bid.get('auctionId')
+        auction = Auction.objects.get(auctionID=auction_id)
+        auction.subscribers.add(
+            User.objects.get(username=data.get('bidder')))
+        auction.save()
+
+    return JsonResponse(retrieved_data, safe=False)
 
 
 def get_all_bids(request):
     url = 'http://localhost:5000/api/v1/getAllBids'
-    response = requests.get(url)
+    response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_one_bid(request, _id):
     url = f'http://localhost:5000/api/v1/getOneBid/{_id}'
-    response = requests.get(url)
+    response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_auction_id(request, auction_id):
     url = f'http://localhost:5000/api/v1/getAllBidsByAuctionId/{auction_id}'
-    response = requests.get(url)
+    response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_bidder_id(request, bidder_id):
     url = f'http://localhost:5000/api/v1/getAllBidsByBidderId/{bidder_id}'
-    response = requests.get(url)
+    response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
@@ -57,7 +78,7 @@ def get_all_bids_by_bidder_id(request, bidder_id):
 def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
     url = 'http://localhost:5000/api/v1/getAllBids/'
     url += f'{auction_id}/{bidder_id}'
-    response = requests.get(url)
+    response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
@@ -69,7 +90,8 @@ def get_winner_by_auction_id(request, auction_id):
         "endTime": end_time
     }
 
-    response = requests.get(url, json=body)
+    response = requests.get(url, json=body,
+                            headers=bid_get_token_middleware(request))
 
     data = response.json()
     return JsonResponse(data, safe=False)
@@ -88,7 +110,8 @@ def update_one_bid(request, _id):
     }
 
     url = f'http://localhost:5000/api/v1/updateOneBid/{_id}'
-    response = requests.patch(url, json=bid)
+    response = requests.patch(url, json=bid,
+                              headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
@@ -96,7 +119,7 @@ def update_one_bid(request, _id):
 @csrf_exempt
 def delete_one_bid(request, _id):
     url = f'http://localhost:5000/api/v1/deleteOneBid/{_id}'
-    response = requests.delete(url)
+    response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
@@ -104,6 +127,6 @@ def delete_one_bid(request, _id):
 @csrf_exempt
 def delete_all_bids_by_auction_id(request, auction_id):
     url = f'http://localhost:5000/api/v1/deleteAllBidsByAuctionId/{auction_id}'
-    response = requests.delete(url)
+    response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
