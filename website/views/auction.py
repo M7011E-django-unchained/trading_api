@@ -7,6 +7,7 @@ from website.serializer import (AuctionListSerializer,
 
 from website.models import Auction
 from rest_framework.permissions import BasePermission
+from .helpers import idempotent_check, IdempotencyException
 
 # Auction views
 
@@ -30,10 +31,12 @@ class AuctionEditPermission(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # staff and superuser can do anything
-        if request.user.is_staff or request.user.is_superuser:
-            return True
         if request.method == "GET":
             return True
+        elif request.user.is_staff or request.user.is_superuser:
+            if idempotent_check(request):
+                return True
+            raise IdempotencyException
         return False  # you should not be able to edit any auctions
         # if you want to be able to edit your auctions, use this:
         # return obj.auctionOwner == request.user
@@ -46,7 +49,9 @@ class AuctionList(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "create":
-            return AuctionCreateSerializer
+            if idempotent_check(self.request):
+                return AuctionCreateSerializer
+            raise IdempotencyException
         return self.serializer_class
 
 
