@@ -7,6 +7,7 @@ from website.serializer import (AuctionListSerializer,
 
 from website.models import Auction
 from rest_framework.permissions import BasePermission
+from .helpers import idempotent_check, IdempotencyException
 
 # Auction views
 
@@ -46,7 +47,9 @@ class AuctionList(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "create":
-            return AuctionCreateSerializer
+            if idempotent_check(self.request):
+                return AuctionCreateSerializer
+            raise IdempotencyException
         return self.serializer_class
 
 

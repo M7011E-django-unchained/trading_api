@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from website.models import Category, Subcategory
 from django.urls import reverse
+from django.core.cache import cache
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .helper import create_dummy_auctions, get_token
@@ -19,6 +20,7 @@ class AuctionListCreateTest(APITestCase):
             category=Category.objects.get(id=1),
             subcategory_name="TestSubcategory")
         self.url = reverse("auction-list")
+        cache.clear()
 
     def test_create_and_list_auction(self):
         """Test creating an auction"""
@@ -143,6 +145,55 @@ class AuctionDetailTest(APITestCase):
         self.client.delete(url)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class AuctionIdempotencyTest(APITestCase):
+    """Test for idempotency"""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword",
+            email="test@test.com")
+        Category.objects.create(name="TestCategory")
+        Subcategory.objects.create(
+            category=Category.objects.get(id=1),
+            subcategory_name="TestSubcategory")
+        self.payload = {"title": "Test Auction",
+                        "description": "This is a test auction",
+                        "subcategory": 1,
+                        "startingPrice": 100,
+                        "buyOutPrice": 200,
+                        "endTime": "2020-12-31T01:00:00+01:00"}
+
+    def test_create_idempotency(self):
+        """Test idempotency for auction creation"""
+        token = get_token("testuser", "testpassword")
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
+        url = reverse("auction-list")
+        # first request should be ok
+        response = self.client.post(url, self.payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # second request should return 201 but not do anything
+        response = self.client.post(url, self.payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # third request should return 201 but not do anything
+        response = self.client.post(url, self.payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # try to create auction with different payload
+        payload = {"title": "Test Auction",
+                   "description": "This is a new test auction",
+                   "subcategory": 1,
+                   "startingPrice": 100,
+                   "buyOutPrice": 200,
+                   "endTime": "2020-12-31T01:00:00+01:00"}
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # check that only two auctions were created
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
 
 
 class CategoryAuctionListTest(APITestCase):
