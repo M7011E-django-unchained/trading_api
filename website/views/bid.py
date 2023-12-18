@@ -23,13 +23,17 @@ def create_bid(request):
     auction_id = data.get('auctionId')
     auction = Auction.objects.get(auctionID=auction_id)
     user = User.objects.get(id=data.get('bidderId'))
+    bid_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if bid_time > auction.endTime.strftime("%Y-%m-%d %H:%M:%S"):
+        return JsonResponse({"message": "Auction has ended"}, status=400)
 
     bid = {
         "auctionId": auction_id,
         "bidder": user.username,
         "bidderId": user.id,
         "bidAmount": data.get('bidAmount'),
-        "bidTime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "bidTime": bid_time,
     }
 
     url = 'http://localhost:5000/api/v1/createBid'
