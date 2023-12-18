@@ -1,0 +1,66 @@
+{% extends "layouts/public_base.html" %}
+
+{% block description %}
+
+{% endblock %}
+
+{% block keywords %}
+
+{% endblock %}
+
+{% block title %}
+    Show Auction
+{% endblock %}
+
+{% block page-header %}
+    Auction
+{% endblock %}
+
+{% block content %}
+    <div class="row py-5">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Auction id</th>
+                    <th>Title</th>
+                    <th>Auction owner</th>
+                    <th>Description</th>
+                    <th>Image path</th>
+                    <th>Category</th>
+                    <th>SubCategory</th>
+                    <th>Starting Price</th>
+                    <th>Buyout Price</th>
+                    <th>StartTime</th>
+                    <th>EndTime</th>
+                    <th>Winner id</th>
+                    <th>Subscribers</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ auction.auctionID }}</td>
+                    <td>{{ auction.title }}</td>
+                    <td>{{ auction.auctionOwner }}</td>
+                    <td>{{ auction.description }}</td>
+                    <td>{{ auction.imagePath }}</td>
+                    <td>{{ auction.category }}</td>
+                    <td>{{ auction.subcategory }}</td>
+                    <td>{{ auction.startingPrice }}</td>
+                    <td>{{ auction.buyOutPrice }}</td>
+                    <td>{{ auction.startTime }}</td>
+                    <td>{{ auction.endTime }}</td>
+                    <td>{{ auction.winnerID }}</td>
+                    <td>
+                        <ol>
+                            {% for sub in auction.subscribed.all %}
+                                <li>{{ sub }}</li>
+                            {% endfor %}
+                        </ol>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

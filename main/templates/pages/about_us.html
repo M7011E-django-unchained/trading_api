@@ -1,0 +1,30 @@
+{% extends 'layouts/public_base.html' %}
+
+{% block description %}
+    Django unchained is a prototype project for a trading platform built with
+    django made during the course M7011E at Luleå University of Technology
+{% endblock %}
+
+{% block keywords %}
+    About Us
+{% endblock %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <section class="py-5 text-center">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">About Us</h1>
+                <p class="lead text-muted">Welcome to the Django Unchained
+                    Trading API</p>
+                <p>
+                    <a href="#" class="btn btn-primary my-2">Who is the
+                        Author?</a>
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
