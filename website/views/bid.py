@@ -3,20 +3,15 @@ import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from rest_framework.authentication import SessionAuthentication, \
-    BasicAuthentication
-from rest_framework.decorators import api_view, authentication_classes, \
-    permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from website.models import Auction
-from website.models import Member
 
 
 def bid_get_token_middleware(request):
     # THERE MUST BE A BETTER WAY TO DO THIS
-    token = request.headers.get('token')
-    return {"authorization": f'Bearer {token}'}
+    token = request.headers.get('authorization')
+    return {"authorization": token}
 
 
 # Create your views here.
@@ -87,7 +82,9 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
 
 def get_winner_by_auction_id(request, auction_id):
     url = f'http://localhost:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
-    end_time = str(Auction.get_end_time(auction_id))[1:][:-1]
+    auction = Auction.objects.get(auctionID=auction_id)
+    end_time = auction.endTime.strftime("%Y-%m-%d %H:%M:%S")
+    print(end_time)
     body = {
         "endTime": end_time
     }

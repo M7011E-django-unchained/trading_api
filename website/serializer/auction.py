@@ -75,8 +75,12 @@ class AuctionCreateSerializer(ModelSerializer):
         category = Category.objects.filter(
             id=subcategory_object[0]["category"])
 
-        return Auction.objects.create(**validated_data, category=category[0],
-                                      auctionOwner=auction_owner)
+        auction = Auction.objects.create(**validated_data,
+                                         category=category[0],
+                                         auctionOwner=auction_owner)
+
+        auction.subscribed.add(auction_owner)
+        return auction
 
 
 class AuctionDetailSerializer(ModelSerializer):

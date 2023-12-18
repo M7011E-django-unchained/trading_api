@@ -1,6 +1,3 @@
-import json
-
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.contrib.auth.models import User
 from .category import Category
@@ -39,12 +36,3 @@ class Auction(models.Model):
 
     def __str__(self) -> str:
         return self.title
-
-    @staticmethod
-    def get_end_time(auction_id):
-        return json.dumps(
-            Auction.objects.get(auctionID=auction_id).endTime,
-            sort_keys=True,
-            indent=1,
-            cls=DjangoJSONEncoder
-        )

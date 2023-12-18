@@ -7,7 +7,6 @@ class Subcategory(models.Model):
         Category, on_delete=models.CASCADE, related_name="parent_category"
     )
     subcategory_name = models.SlugField(
-        primary_key=True,
         max_length=45,
         null=False,
         unique=True,

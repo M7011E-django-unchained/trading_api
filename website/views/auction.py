@@ -58,10 +58,6 @@ class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AuctionDetailSerializer
     lookup_field = "auctionID"
 
-    # add user to subscribed list of auction when auction is created
-    def perform_create(self, serializer):
-        serializer.save(subscribed=[self.request.user])
-
 
 class CategoryAuctionList(generics.ListAPIView):
     serializer_class = AuctionListSerializer
@@ -93,3 +89,29 @@ class MemberAuctionList(ModelViewSet):
         resp_data = Auction.objects.filter(
             auctionOwner__username=username).delete()
         return Response(resp_data, status=status.HTTP_204_NO_CONTENT)
+
+
+class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (AuctionEditPermission,)
+
+    queryset = Auction.objects.all()
+    serializer_class = AuctionDetailSerializer
+    lookup_field = "auctionID"
+
+    def put(self, request, *args, **kwargs):
+        auction = self.get_object()
+        user = request.user
+        if user in auction.subscribed.all():
+            auction.subscribed.remove(user)
+            msg = f'You are no longer subscribed to "{auction.title}"'
+            return Response(
+                {
+                    "message": msg},
+                status=status.HTTP_200_OK)
+        else:
+            auction.subscribed.add(user)
+            msg = f'You are now subscribed to "{auction.title}"'
+            return Response(
+                {
+                    "message": msg},
+                status=status.HTTP_200_OK)
