@@ -4,7 +4,7 @@ from website.views import (
     AuctionDetail,
     MemberAuctionList,
     CategoryAuctionList,
-    SubcategoryAuctionList,
+    SubcategoryAuctionList, AuctionSubscribe,
 )
 
 urlpatterns = [
@@ -33,5 +33,7 @@ urlpatterns = [
         SubcategoryAuctionList.as_view(),
         name="subcategory-auction-list",
     ),
+    path("subscribe/<int:auctionID>", AuctionSubscribe.as_view(),
+         name="subscribe"),
 
 ]

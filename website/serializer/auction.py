@@ -7,6 +7,7 @@ from rest_framework.serializers import (
 from django.contrib.auth.models import User
 from website.models import Auction, Category, Subcategory
 
+
 # Auction serializers
 
 
@@ -52,7 +53,6 @@ class AuctionListSerializer(HyperlinkedModelSerializer):
 
 
 class AuctionCreateSerializer(ModelSerializer):
-
     class Meta:
         model = Auction
         fields = (
@@ -69,14 +69,18 @@ class AuctionCreateSerializer(ModelSerializer):
 
     def create(self, validated_data):
         subcategory = validated_data.get("subcategory")
-        auctionOwner = self.context["request"].user
+        auction_owner = self.context["request"].user
         subcategory_object = Subcategory.objects.filter(
             subcategory_name=subcategory).values("category")
         category = Category.objects.filter(
             id=subcategory_object[0]["category"])
 
-        return Auction.objects.create(**validated_data, category=category[0],
-                                      auctionOwner=auctionOwner)
+        auction = Auction.objects.create(**validated_data,
+                                         category=category[0],
+                                         auctionOwner=auction_owner)
+
+        auction.subscribed.add(auction_owner)
+        return auction
 
 
 class AuctionDetailSerializer(ModelSerializer):

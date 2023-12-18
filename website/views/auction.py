@@ -3,11 +3,12 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from website.serializer import (AuctionListSerializer,
                                 AuctionDetailSerializer,
-                                AuctionCreateSerializer,)
+                                AuctionCreateSerializer, )
 
 from website.models import Auction
 from rest_framework.permissions import BasePermission
 from .helpers import idempotent_check, IdempotencyException
+
 
 # Auction views
 
@@ -43,7 +44,7 @@ class AuctionEditPermission(BasePermission):
 class AuctionList(ModelViewSet):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
-    permission_classes = (AuctionPermission, )
+    permission_classes = (AuctionPermission,)
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -54,7 +55,7 @@ class AuctionList(ModelViewSet):
 
 
 class AuctionDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (AuctionEditPermission, )
+    permission_classes = (AuctionEditPermission,)
 
     queryset = Auction.objects.all()
     serializer_class = AuctionDetailSerializer
@@ -80,7 +81,7 @@ class SubcategoryAuctionList(generics.ListAPIView):
 class MemberAuctionList(ModelViewSet):
     queryset = Auction.objects.all()
     serializer_class = AuctionListSerializer
-    permission_classes = (AuctionEditPermission, )
+    permission_classes = (AuctionEditPermission,)
 
     def get_queryset(self):
         username = self.kwargs["username"]
@@ -91,3 +92,29 @@ class MemberAuctionList(ModelViewSet):
         resp_data = Auction.objects.filter(
             auctionOwner__username=username).delete()
         return Response(resp_data, status=status.HTTP_204_NO_CONTENT)
+
+
+class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (AuctionEditPermission,)
+
+    queryset = Auction.objects.all()
+    serializer_class = AuctionDetailSerializer
+    lookup_field = "auctionID"
+
+    def put(self, request, *args, **kwargs):
+        auction = self.get_object()
+        user = request.user
+        if user in auction.subscribed.all():
+            auction.subscribed.remove(user)
+            msg = f'You are no longer subscribed to "{auction.title}"'
+            return Response(
+                {
+                    "message": msg},
+                status=status.HTTP_200_OK)
+        else:
+            auction.subscribed.add(user)
+            msg = f'You are now subscribed to "{auction.title}"'
+            return Response(
+                {
+                    "message": msg},
+                status=status.HTTP_200_OK)
