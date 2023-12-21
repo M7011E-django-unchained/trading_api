@@ -32,7 +32,7 @@ class SubcategoryListTest(APITestCase):
         url = reverse("subcategory-list")
         Category.objects.create(name="Vehicle")
 
-        payload = {"subcategory_name": "Train", "category": 1}
+        payload = {"subcategory_name": "Train", "category": "Vehicle"}
 
         # user should not be allowed to create subcategories
         user_token = get_token(self.user, "testuser")
@@ -83,7 +83,7 @@ class SubcategoryDetailTest(APITestCase):
 
         url = reverse("subcategory-detail", args=["Car"])
         payload = {"subcategory_name": "Train",
-                   "category": "http://testserver/api/1/category/Vehicle"}
+                   "category": "Vehicle"}
 
         # user should not be allowed to update subcategories
         user_token = get_token(self.user, "testuser")
@@ -107,7 +107,7 @@ class SubcategoryDetailTest(APITestCase):
         # should not be possible to update subcategory to duplicate
         url = reverse("subcategory-detail", args=["Motorcycle"])
         payload = {"subcategory_name": "Train",
-                   "category": "http://testserver/api/1/category/Vehicle"}
+                   "category": "Vehicle"}
         response = self.client.put(url, payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         subcategories = Subcategory.objects.all()

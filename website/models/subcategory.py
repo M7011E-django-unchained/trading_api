@@ -12,6 +12,7 @@ class Subcategory(models.Model):
         unique=True,
         blank=False,
         allow_unicode=True,
+
     )
 
     def __str__(self) -> str:
