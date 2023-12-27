@@ -2,7 +2,7 @@ from django.urls import path
 
 from website.views import (
     ShipmentList, ShipmentDetail, ShipmentPaid, ShipmentUnpaid,
-    ShipmentShipped, ShipmentUnshipped)
+    ShipmentShipped, ShipmentUnshipped, ShipmentUserList, ShipmentByAuction)
 
 urlpatterns = [
     path(
@@ -18,5 +18,9 @@ urlpatterns = [
     path("unpaid/", ShipmentUnpaid.as_view(), name="shipment-unpaid"),
     path("shipped/", ShipmentShipped.as_view(), name="shipment-shipped"),
     path("unshipped/", ShipmentUnshipped.as_view(), name="shipment-unshipped"),
+    path("user/<int:pk>",
+         ShipmentUserList.as_view(), name="shipment-user"),
+    path("auction/<int:pk>", ShipmentByAuction.as_view(),
+         name="shipment-auction")
 
 ]

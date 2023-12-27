@@ -32,6 +32,14 @@ class ShipmentPermission(BasePermission):
         return request.user.is_staff or request.user.is_superuser
 
 
+class ShipmentStaffPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_staff or request.user.is_superuser
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_staff or request.user.is_superuser
+
+
 class ShipmentList(ModelViewSet):
     serializer_class = ShipmentListSerializer
     permission_classes = [ShipmentPermission]
@@ -47,28 +55,69 @@ class ShipmentList(ModelViewSet):
         return Shipment.objects.filter(username=self.request.user)
 
 
-class ShipmentDetail(generics.RetrieveAPIView):
+class ShipmentDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ShipmentDetailSerializer
     permission_classes = [ShipmentPermission]
-    queryset = Shipment.objects.all()
-    lookup_field = "pk"
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Shipment.objects.all()
+        return Shipment.objects.filter(username=self.request.user)
 
 
 class ShipmentPaid(generics.ListAPIView):
     serializer_class = ShipmentListSerializer
-    queryset = Shipment.objects.filter(paid=True)
+    permission_classes = [ShipmentPermission]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Shipment.objects.filter(paid=True)
+        return Shipment.objects.filter(paid=True, username=self.request.user)
 
 
 class ShipmentUnpaid(generics.ListAPIView):
     serializer_class = ShipmentListSerializer
-    queryset = Shipment.objects.filter(paid=False)
+    permission_classes = [ShipmentPermission]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Shipment.objects.filter(paid=False)
+        return Shipment.objects.filter(paid=False, username=self.request.user)
 
 
 class ShipmentShipped(generics.ListAPIView):
     serializer_class = ShipmentListSerializer
-    queryset = Shipment.objects.filter(shipped=True)
+    permission_classes = [ShipmentPermission]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Shipment.objects.filter(shipped=True)
+        return Shipment.objects.filter(shipped=True,
+                                       username=self.request.user)
 
 
 class ShipmentUnshipped(generics.ListAPIView):
     serializer_class = ShipmentListSerializer
-    queryset = Shipment.objects.filter(shipped=False)
+    permission_classes = [ShipmentPermission]
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return Shipment.objects.filter(shipped=False)
+        return Shipment.objects.filter(shipped=False,
+                                       username=self.request.user)
+
+
+class ShipmentUserList(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    permission_classes = [ShipmentStaffPermission]
+
+    def get_queryset(self):
+        return Shipment.objects.filter(username=self.kwargs["pk"])
+
+
+class ShipmentByAuction(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    permission_classes = [ShipmentStaffPermission]
+
+    def get_queryset(self):
+        return Shipment.objects.filter(auctionID=self.kwargs["pk"])
