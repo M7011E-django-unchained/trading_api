@@ -7,5 +7,4 @@ urlpatterns = [
         "", ShipmentList.as_view({"get": "list", "post": "create"}),
         name="shipment-list",
     ),
-
 ]

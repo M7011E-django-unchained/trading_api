@@ -7,7 +7,7 @@ class Shipment(models.Model):
     shipmentID = models.AutoField(primary_key=True)
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     auctionID = models.OneToOneField(
-        Auction, null=True, on_delete=models.SET_NULL)
+        Auction, null=True, on_delete=models.SET_NULL, unique=True)
     bidAmount = models.DecimalField(max_digits=10, decimal_places=2)
     paid = models.BooleanField(default=False)
     shipped = models.BooleanField(default=False)
