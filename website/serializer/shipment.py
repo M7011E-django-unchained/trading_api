@@ -1,6 +1,7 @@
 from rest_framework.serializers import (
     HyperlinkedModelSerializer,
     HyperlinkedRelatedField,
+    HyperlinkedIdentityField,
     ModelSerializer
 
 )
@@ -8,7 +9,18 @@ from website.models import Shipment, Auction
 from django.contrib.auth.models import User
 
 
-class ShipmentSerializer(HyperlinkedModelSerializer):
+class ShipmentListSerializer(ModelSerializer):
+    shipmentID = HyperlinkedIdentityField(
+        view_name="shipment-detail",
+        lookup_field="pk",
+    )
+
+    class Meta:
+        model = Shipment
+        fields = ("shipmentID",)
+
+
+class ShipmentCreateSerializer(HyperlinkedModelSerializer):
 
     username = HyperlinkedRelatedField(
         view_name="member-detail",

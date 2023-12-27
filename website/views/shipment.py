@@ -1,4 +1,9 @@
-from website.serializer import ShipmentSerializer, ShipmentDetailSerializer
+from website.serializer import (
+    ShipmentListSerializer,
+    ShipmentCreateSerializer,
+    ShipmentDetailSerializer,
+)
+
 from website.models import Shipment
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import BasePermission
@@ -28,8 +33,13 @@ class ShipmentPermission(BasePermission):
 
 
 class ShipmentList(ModelViewSet):
-    serializer_class = ShipmentSerializer
+    serializer_class = ShipmentListSerializer
     permission_classes = [ShipmentPermission]
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ShipmentCreateSerializer
+        return ShipmentListSerializer
 
     def get_queryset(self):
         if self.request.user.is_staff:
