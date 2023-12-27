@@ -1,8 +1,8 @@
-from website.serializer import ShipmentSerializer
+from website.serializer import ShipmentSerializer, ShipmentDetailSerializer
 from website.models import Shipment
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import BasePermission
-
+from rest_framework import generics
 
 # Shipment views
 
@@ -35,3 +35,10 @@ class ShipmentList(ModelViewSet):
         if self.request.user.is_staff:
             return Shipment.objects.all()
         return Shipment.objects.filter(username=self.request.user)
+
+
+class ShipmentDetail(generics.RetrieveAPIView):
+    serializer_class = ShipmentDetailSerializer
+    permission_classes = [ShipmentPermission]
+    queryset = Shipment.objects.all()
+    lookup_field = "pk"
