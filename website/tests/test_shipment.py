@@ -29,17 +29,17 @@ class ShipmentListTest(APITestCase):
         Shipment.objects.create(
             username=self.user1, auctionID=Auction.objects.
             get(auctionID=1), shipped=False, paid=False,
-            bidAmount=1000, shippingDetails="address user1")
+            shippingDetails="address user1")
 
         Shipment.objects.create(
             username=self.user1, auctionID=Auction.objects.
             get(auctionID=2), shipped=False, paid=False,
-            bidAmount=1000, shippingDetails="address user1")
+            shippingDetails="address user1")
 
         Shipment.objects.create(
             username=self.user2, auctionID=Auction.objects.
             get(auctionID=3), shipped=False, paid=False,
-            bidAmount=1000, shippingDetails="address user2")
+            shippingDetails="address user2")
 
     def test_get_shipment_as_guest(self):
         url = reverse("shipment-list")

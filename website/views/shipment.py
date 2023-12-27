@@ -2,7 +2,7 @@ from website.serializer import ShipmentSerializer
 from website.models import Shipment
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import BasePermission
-from .helpers import idempotent_check, IdempotencyException
+
 
 # Shipment views
 
@@ -29,14 +29,7 @@ class ShipmentPermission(BasePermission):
 
 class ShipmentList(ModelViewSet):
     serializer_class = ShipmentSerializer
-    permission_classes = (ShipmentPermission,)
-
-    def get_serializer_class(self):
-        if self.action == "create":
-            if idempotent_check(self.request):
-                return ShipmentSerializer
-            raise IdempotencyException
-        return self.serializer_class
+    permission_classes = [ShipmentPermission]
 
     def get_queryset(self):
         if self.request.user.is_staff:
