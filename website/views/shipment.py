@@ -52,3 +52,23 @@ class ShipmentDetail(generics.RetrieveAPIView):
     permission_classes = [ShipmentPermission]
     queryset = Shipment.objects.all()
     lookup_field = "pk"
+
+
+class ShipmentPaid(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    queryset = Shipment.objects.filter(paid=True)
+
+
+class ShipmentUnpaid(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    queryset = Shipment.objects.filter(paid=False)
+
+
+class ShipmentShipped(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    queryset = Shipment.objects.filter(shipped=True)
+
+
+class ShipmentUnshipped(generics.ListAPIView):
+    serializer_class = ShipmentListSerializer
+    queryset = Shipment.objects.filter(shipped=False)
