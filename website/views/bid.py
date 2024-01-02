@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from website.models import Auction
+from django.core.mail import send_mail
 
 
 def bid_get_token_middleware(request):
@@ -42,6 +43,20 @@ def create_bid(request):
     retrieved_data = response.json()
 
     if response.status_code == 201:
+        # Email to bidder
+        subject = f'You have placed a bid on {auction.title}'
+        message = f'You have placed a bid of ${bid.get("bidAmount")} on {auction.title}'
+        from_email = 'django.unchained.project@gmail.com'
+        recipient_list = [user.email]
+        send_mail(subject, message, from_email, recipient_list)
+
+        # Email to subscribed users
+        subject = f'A new bid has been placed on {auction.title}'
+        message = f'A new bid of ${bid.get("bidAmount")} has been placed on {auction.title}'
+        from_email = 'django.unchained.project@gmail.com'
+        recipient_list = [user.email for user in auction.subscribed.all()]
+        send_mail(subject, message, from_email, recipient_list)
+
         auction.subscribed.add(user)
         auction.save()
 
