@@ -1,0 +1,32 @@
+{% extends 'layouts/public_base.html' %}
+
+{% block description %}
+    Learn django by doing, practice on real world projects
+{% endblock %}
+
+{% block keywords %}
+    Learn by doing
+{% endblock %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <section class="mt-4 text-center">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Django Unchained Trading API</h1>
+                <p class="lead text-muted">Welcome to the Django Unchained
+                    Trading API. A prototype trading API.</p>
+                <p>
+                    <a href="{% url 'main:auctions' %}"
+                       class="btn btn-primary my-2">Check our list of
+                        auctions</a>
+                    <a href="{% url 'main:about_us' %}"
+                       class="btn btn-secondary my-2">Learn more about us</a>
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

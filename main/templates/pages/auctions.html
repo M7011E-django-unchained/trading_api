@@ -1,0 +1,55 @@
+{% extends "layouts/public_base.html" %}
+
+{% block description %}
+
+{% endblock %}
+
+{% block keywords %}
+
+{% endblock %}
+
+{% block title %}
+    List of Auctions
+{% endblock %}
+
+{% block page-header %}
+    Auctions
+{% endblock %}
+
+{% block content %}
+    <div class="row py-5">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Starting Price</th>
+                    <th>Category</th>
+                    <th>SubCategory</th>
+                    <th>StartTime</th>
+                    <th>EndTime</th>
+                    <th>Subscribers</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for auction in auctions %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'main:show_auction' auction_id=auction.auctionID %}">
+                                {{ auction.title }}
+                            </a>
+                        </td>
+                        <td>{{ auction.description }}</td>
+                        <td>{{ auction.startingPrice }}</td>
+                        <td>{{ auction.category }}</td>
+                        <td>{{ auction.subcategory }}</td>
+                        <td>{{ auction.startTime }}</td>
+                        <td>{{ auction.endTime }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

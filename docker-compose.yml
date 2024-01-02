@@ -1,10 +1,12 @@
 version: '1'
 services:
-  web:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
     image: trading_api_web
     container_name: trading_api_web
     restart: always
     ports:
       - 8000:8000
-#    command: bash -c /usr/src/app/start.sh
-#    env_file: .env

@@ -38,9 +38,12 @@ INSTALLED_APPS = [
     "django_extensions",
     "rest_framework",
     "rest_framework_simplejwt",
+    'corsheaders',
+    'debug_toolbar',
+    'django_seed',
     "website",
     "users",
-    'corsheaders',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +148,10 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = None
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'django.unchained.project@gmail.com'
+EMAIL_HOST_PASSWORD = 'chji jtbd akya ijcz'
