@@ -45,14 +45,20 @@ def create_bid(request):
     if response.status_code == 201:
         # Email to bidder
         subject = f'You have placed a bid on {auction.title}'
-        message = f'You have placed a bid of ${bid.get("bidAmount")} on {auction.title}'
+        message = (
+            f'You have placed a bid of ${bid.get("bidAmount")}'
+            f' on {auction.title}'
+        )
         from_email = 'django.unchained.project@gmail.com'
         recipient_list = [user.email]
         send_mail(subject, message, from_email, recipient_list)
 
         # Email to subscribed users
         subject = f'A new bid has been placed on {auction.title}'
-        message = f'A new bid of ${bid.get("bidAmount")} has been placed on {auction.title}'
+        message = (
+            f'A new bid of ${bid.get("bidAmount")}'
+            f' has been placed on {auction.title}'
+        )
         from_email = 'django.unchained.project@gmail.com'
         recipient_list = [user.email for user in auction.subscribed.all()]
         send_mail(subject, message, from_email, recipient_list)

@@ -1,8 +1,6 @@
-from django.db.models import Count
 from django.shortcuts import render
 
 from website.models import Auction
-from website.views import bid
 
 
 # Create your views here.
