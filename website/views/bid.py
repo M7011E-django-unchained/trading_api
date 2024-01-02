@@ -8,7 +8,7 @@ from rest_framework.utils import json
 from website.models import Auction
 from django.core.mail import send_mail
 
-host = 'm7011e-django-unchained/bidding_system://bidding_system:5000/api/v1/'
+host = 'http://bidding_system:5000/api/v1/'
 
 
 def bid_get_token_middleware(request):
