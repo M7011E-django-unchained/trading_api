@@ -24,7 +24,7 @@ SECRET_KEY = "django-insecure-19(*xm7&0+3)aa7r*w3%uc$)p15!6i2ng)_8(cx5)#fhsx$ng+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["trading-api", "localhost", "bidding_system"]
 
 # Application definition
 
