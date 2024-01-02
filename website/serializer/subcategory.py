@@ -1,12 +1,19 @@
 from rest_framework.serializers import (
     ModelSerializer,
     HyperlinkedModelSerializer,
-    HyperlinkedRelatedField,
     HyperlinkedIdentityField,
+    SlugRelatedField,
 )
+from django.urls import reverse
 from website.models import Category, Subcategory
 
 # Subcategory serializers
+
+
+class categoryTranslator(SlugRelatedField):
+    def to_representation(self, value):
+        return self.context['request'].build_absolute_uri(
+            reverse('category-detail', kwargs={'name': value.name}))
 
 
 class SubcategoryListSerializer(HyperlinkedModelSerializer):
@@ -15,11 +22,8 @@ class SubcategoryListSerializer(HyperlinkedModelSerializer):
         lookup_field="subcategory_name",
     )
 
-    category = HyperlinkedRelatedField(
-        view_name="category-detail",
-        lookup_field="name",
-        queryset=Category.objects.all(),
-    )
+    category = categoryTranslator(
+        queryset=Category.objects.all(), slug_field='name')
 
     class Meta:
         model = Subcategory
@@ -27,17 +31,17 @@ class SubcategoryListSerializer(HyperlinkedModelSerializer):
 
 
 class SubcategoryCreateSerializer(ModelSerializer):
+    category = categoryTranslator(
+        queryset=Category.objects.all(), slug_field='name')
+
     class Meta:
         model = Subcategory
         fields = ("category", "subcategory_name")
 
 
 class SubcategoryDetailSerializer(ModelSerializer):
-    category = HyperlinkedRelatedField(
-        view_name="category-detail",
-        lookup_field="name",
-        queryset=Category.objects.all(),
-    )
+    category = categoryTranslator(
+        queryset=Category.objects.all(), slug_field='name')
 
     auctions = HyperlinkedIdentityField(
         view_name="subcategory-auction-list",

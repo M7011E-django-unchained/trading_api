@@ -3,3 +3,4 @@ from .category import *
 from .member import *
 from .subcategory import *
 from .bid import *
+from .shipment import *
