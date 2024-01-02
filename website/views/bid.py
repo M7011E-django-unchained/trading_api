@@ -8,6 +8,8 @@ from rest_framework.utils import json
 from website.models import Auction
 from django.core.mail import send_mail
 
+host = 'm7011e-django-unchained/bidding_system://bidding_system:5000/api/v1/'
+
 
 def bid_get_token_middleware(request):
     # THERE MUST BE A BETTER WAY TO DO THIS
@@ -37,7 +39,7 @@ def create_bid(request):
         "bidTime": bid_time,
     }
 
-    url = 'http://bidding_system:5000/api/v1/createBid'
+    url = f'{host}createBid'
     response = requests.post(url, json=bid,
                              headers=bid_get_token_middleware(request))
     retrieved_data = response.json()
@@ -70,35 +72,35 @@ def create_bid(request):
 
 
 def get_all_bids(request):
-    url = 'http://bidding_system:5000/api/v1/getAllBids'
+    url = f'{host}getAllBids'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_one_bid(request, _id):
-    url = f'http://bidding_system:5000/api/v1/getOneBid/{_id}'
+    url = f'{host}getOneBid/{_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_auction_id(request, auction_id):
-    url = f'http://bidding_system:5000/api/v1/getAllBidsByAuctionId/{auction_id}'
+    url = f'{host}getAllBidsByAuctionId/{auction_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_bidder_id(request, bidder_id):
-    url = f'http://bidding_system:5000/api/v1/getAllBidsByBidderId/{bidder_id}'
+    url = f'{host}getAllBidsByBidderId/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
-    url = 'http://bidding_system:5000/api/v1/getAllBids/'
+    url = f'{host}getAllBids/'
     url += f'{auction_id}/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -106,7 +108,7 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
 
 
 def get_winner_by_auction_id(request, auction_id):
-    url = f'http://bidding_system:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
+    url = f'{host}getWinnerbyAuctionId/{auction_id}'
     auction = Auction.objects.get(auctionID=auction_id)
     end_time = auction.endTime.strftime("%Y-%m-%d %H:%M:%S")
     print(end_time)
@@ -133,7 +135,7 @@ def update_one_bid(request, _id):
         "bidTime": data.get('bidTime'),
     }
 
-    url = f'http://localhost:5000/api/v1/updateOneBid/{_id}'
+    url = f'{host}updateOneBid/{_id}'
     response = requests.patch(url, json=bid,
                               headers=bid_get_token_middleware(request))
     data = response.json()
@@ -142,7 +144,7 @@ def update_one_bid(request, _id):
 
 @csrf_exempt
 def delete_one_bid(request, _id):
-    url = f'http://localhost:5000/api/v1/deleteOneBid/{_id}'
+    url = f'{host}deleteOneBid/{_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
@@ -150,7 +152,7 @@ def delete_one_bid(request, _id):
 
 @csrf_exempt
 def delete_all_bids_by_auction_id(request, auction_id):
-    url = f'http://localhost:5000/api/v1/deleteAllBidsByAuctionId/{auction_id}'
+    url = f'{host}deleteAllBidsByAuctionId/{auction_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
