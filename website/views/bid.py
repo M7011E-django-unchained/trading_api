@@ -37,7 +37,7 @@ def create_bid(request):
         "bidTime": bid_time,
     }
 
-    url = 'http://localhost:5000/api/v1/createBid'
+    url = 'http://bidding_system:5000/api/v1/createBid'
     response = requests.post(url, json=bid,
                              headers=bid_get_token_middleware(request))
     retrieved_data = response.json()
@@ -70,35 +70,35 @@ def create_bid(request):
 
 
 def get_all_bids(request):
-    url = 'http://localhost:5000/api/v1/getAllBids'
+    url = 'http://bidding_system:5000/api/v1/getAllBids'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_one_bid(request, _id):
-    url = f'http://localhost:5000/api/v1/getOneBid/{_id}'
+    url = f'http://bidding_system:5000/api/v1/getOneBid/{_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_auction_id(request, auction_id):
-    url = f'http://localhost:5000/api/v1/getAllBidsByAuctionId/{auction_id}'
+    url = f'http://bidding_system:5000/api/v1/getAllBidsByAuctionId/{auction_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_bidder_id(request, bidder_id):
-    url = f'http://localhost:5000/api/v1/getAllBidsByBidderId/{bidder_id}'
+    url = f'http://bidding_system:5000/api/v1/getAllBidsByBidderId/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
 
 
 def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
-    url = 'http://localhost:5000/api/v1/getAllBids/'
+    url = 'http://bidding_system:5000/api/v1/getAllBids/'
     url += f'{auction_id}/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -106,7 +106,7 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
 
 
 def get_winner_by_auction_id(request, auction_id):
-    url = f'http://localhost:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
+    url = f'http://bidding_system:5000/api/v1/getWinnerbyAuctionId/{auction_id}'
     auction = Auction.objects.get(auctionID=auction_id)
     end_time = auction.endTime.strftime("%Y-%m-%d %H:%M:%S")
     print(end_time)
