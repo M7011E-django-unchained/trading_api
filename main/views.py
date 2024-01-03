@@ -74,8 +74,14 @@ def show_user(request, user_id):
     :return:
     """
     user = get_object_or_404(User, pk=user_id)
+    auction_owner_list = Auction.objects.select_related('auctionOwner').filter(
+        auctionOwner=user)
+    user_subbed_to_auction_list = Auction.objects.prefetch_related(
+        'subscribed').filter(subscribed=user)
     context = {
         'user': user,
+        'owned_auctions': auction_owner_list,
+        'subscribed_auctions': user_subbed_to_auction_list,
     }
 
     return render(request, 'pages/show_user.html', context)

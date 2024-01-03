@@ -47,6 +47,32 @@
                 </tr>
                 </tbody>
             </table>
+
+            <h2>Auctions {{ user.username }} owns</h2>
+            <ul>
+                {% for auction in owned_auctions %}
+                    <li>
+                        <a href="{% url 'main:show_auction' auction_id=auction.auctionID %}">
+                            {{ auction.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>This user do not own auctions.</li>
+                {% endfor %}
+            </ul>
+
+            <h2>Auctions {{ user.username }} is subscribed to</h2>
+            <ul>
+                {% for auction in subscribed_auctions %}
+                    <li>
+                        <a href="{% url 'main:show_auction' auction_id=auction.auctionID %}">
+                            {{ auction.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>This user is not subscribed to any auctions.</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 {% endblock %}
