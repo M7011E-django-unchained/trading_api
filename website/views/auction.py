@@ -6,7 +6,7 @@ from website.serializer import (AuctionListSerializer,
                                 AuctionCreateSerializer, )
 
 from website.models import Auction
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from .helpers import idempotent_check, IdempotencyException
 
 
@@ -95,7 +95,7 @@ class MemberAuctionList(ModelViewSet):
 
 
 class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (AuctionEditPermission,)
+    permission_classes = (IsAuthenticated,)
 
     queryset = Auction.objects.all()
     serializer_class = AuctionDetailSerializer
@@ -104,7 +104,7 @@ class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, *args, **kwargs):
         auction = self.get_object()
         user = request.user
-        if user in auction.subscribed.all():
+        if user in auction.subscribed.all() and auction.auctionOwner != user:
             auction.subscribed.remove(user)
             msg = f'You are no longer subscribed to "{auction.title}"'
             return Response(

@@ -73,11 +73,12 @@ def show_user(request, user_id):
     :param user_id:
     :return:
     """
-    user = get_object_or_404(User, pk=user_id)
-    auction_owner_list = Auction.objects.select_related('auctionOwner').filter(
-        auctionOwner=user)
-    user_subbed_to_auction_list = Auction.objects.prefetch_related(
-        'subscribed').filter(subscribed=user)
+    user = get_object_or_404(User.objects.prefetch_related('auction_set',
+                                                           'auction_set__subscribed'),
+                             pk=user_id)
+    auction_owner_list = user.auction_set.all()
+    user_subbed_to_auction_list = [auction for auction in auction_owner_list if
+                                   user in auction.subscribed.all()]
     context = {
         'user': user,
         'owned_auctions': auction_owner_list,
