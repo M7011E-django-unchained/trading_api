@@ -1,0 +1,48 @@
+{% extends "layouts/public_base.html" %}
+
+{% block description %}
+    <!-- Add your description here -->
+{% endblock %}
+
+{% block keywords %}
+    <!-- Add your keywords here -->
+{% endblock %}
+
+{% block title %}
+    List of Users
+{% endblock %}
+
+{% block page-header %}
+    Users
+{% endblock %}
+
+{% block content %}
+    <div class="row py-5">
+        <div class="col-xs-12">
+            <table class="table table-bordered table-condensed">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'main:show_user' user_id=user.id %}">
+                                {{ user.username }}
+                            </a>
+                        </td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No users found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
