@@ -112,7 +112,7 @@ class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
                     "message": msg},
                 status=status.HTTP_200_OK)
         elif auction.auctionOwner == user:
-            msg = f'You are always subscribed to your own auctions'
+            msg = 'You are always subscribed to your own auctions'
             return Response(
                 {
                     "message": msg},
