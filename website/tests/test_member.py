@@ -29,7 +29,9 @@ class TestMemberList(APITestCase):
             email="staff@example.com",
             is_staff=True,
         )
-
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         self.url = reverse("member-list")
 
     def test_get_member_list_as_guest(self):
@@ -65,7 +67,9 @@ class TestMemberDetail(APITestCase):
             email="staff@example.com",
             is_staff=True,
         )
-
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         self.url = reverse("member-detail", kwargs={"username": "testuser"})
 
     def test_get_member_detail_as_guest(self):

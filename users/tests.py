@@ -36,6 +36,9 @@ class UpdateUserTest(APITestCase):
             password='testpass123',
             email='test@example.com'
         )
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         self.url = reverse('users:update')
 
     def test_retrieve_user(self):
@@ -44,7 +47,6 @@ class UpdateUserTest(APITestCase):
                    'password': 'testpass123'}
         response = self.client.post(
             reverse('users:token_obtain_pair'), payload)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         token = response.data['access']
@@ -90,6 +92,9 @@ class CreateTokenTest(APITestCase):
             username='testuser',
             password='testpass123',
         )
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         self.url = reverse('users:token_obtain_pair')
 
     def test_create_token(self):
@@ -112,6 +117,9 @@ class RefreshTokenTest(APITestCase):
             password='testpass123',
         )
         self.url = reverse('users:token_refresh')
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
 
     def test_refresh_token(self):
         payload = {'username': 'testuser',
@@ -139,6 +147,9 @@ class VerifyTokenTest(APIClient):
             password='testpass123',
         )
         self.url = reverse('users:token_verify')
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
 
     def test_verify_token(self):
         payload = {'username': 'testuser',

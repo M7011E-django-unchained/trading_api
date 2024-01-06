@@ -15,6 +15,9 @@ class AuctionListCreateTest(APITestCase):
         self.user = User.objects.create_user(
             username="testuser", password="testpassword"
         )
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         Category.objects.create(name="TestCategory")
         Subcategory.objects.create(
             category=Category.objects.get(id=1),
@@ -84,6 +87,9 @@ class AuctionDetailTest(APITestCase):
         self.user2 = User.objects.create_user(
             username="testuser2", password="testpassword2",
             email="test2@example.com")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         create_dummy_auctions()
 
     def test_get_auction(self):
@@ -129,7 +135,9 @@ class AuctionDetailTest(APITestCase):
             username="staff", password="testpassword",
             email="staff@example.com", is_staff=True
         )
-
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         response = self.client.get(url)
         self.assertEqual(response.data["title"], "Test Auction 0")
 
@@ -155,6 +163,9 @@ class AuctionIdempotencyTest(APITestCase):
         self.user = User.objects.create_user(
             username="testuser", password="testpassword",
             email="test@test.com")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         Category.objects.create(name="TestCategory")
         Subcategory.objects.create(
             category=Category.objects.get(id=1),
@@ -204,6 +215,9 @@ class CategoryAuctionListTest(APITestCase):
         self.user = User.objects.create_user(
             username="testuser", password="testpassword",
             email="test@example.com")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         create_dummy_auctions()
 
     def test_get_category_auctions(self):
@@ -226,6 +240,9 @@ class SubcategoryAuctionListTest(APITestCase):
         self.user = User.objects.create_user(
             username="testuser", password="testpassword",
             email="test@example.com")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         create_dummy_auctions()
 
     def test_get_subcategory_auctions(self):
@@ -300,7 +317,9 @@ class MemberAuctionListTest(APITestCase):
             username="staff", password="testpassword",
             email="staff@example.com", is_staff=True
         )
-
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
         # there exists auctions by auctionOwner1
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

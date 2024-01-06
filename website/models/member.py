@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save  # , pre_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
@@ -20,15 +20,12 @@ User._meta.get_field('email')._unique = True
 User._meta.get_field('email').blank = False
 User._meta.get_field('email').null = False
 
-# this sets user as inactive. Used for email verification on registration
 
-# @receiver(pre_save, sender=User)
-# def set_new_user_inactive(sender, instance, **kwargs):
-#     if instance._state.adding is True:
-#         print("Creating Inactive User")
-#         instance.is_active = False
-#     else:
-#         print("Updating User Record")
+# this sets user as inactive. Used for email verification on registration
+@receiver(pre_save, sender=User)
+def set_new_user_inactive(sender, instance, **kwargs):
+    if instance._state.adding is True:
+        instance.is_active = False
 
 
 @receiver(post_save, sender=User)
