@@ -48,3 +48,18 @@ class UserDetailSerializer(ModelSerializer):
             "profilePicPath",
             "auctions",
         )
+
+
+class UserDetailLimitedSerializer(ModelSerializer):
+
+    auctions = HyperlinkedIdentityField(
+        view_name="member-auction-list",
+        lookup_field="username",
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            "username",
+            "auctions",
+        )
