@@ -17,11 +17,32 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
+from django.contrib.auth.models import User
 from trading_api import settings
+from django.apps import apps
+
+from django_otp.admin import OTPAdminSite
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+
+
+class OTPAdmin(OTPAdminSite):
+    pass
+
+
+admin_site = OTPAdmin(name='OTPAdmin')
+admin_site.register(User)
+admin_site.register(TOTPDevice, TOTPDeviceAdmin)
+
+# register all models
+app = apps.get_app_config('website')
+for model_name, model in app.models.items():
+    admin_site.register(model)
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin_site.urls),
+    path("debugAdmin/", admin.site.urls),
     path("api/1/", include("website.urls")),
     path("user/", include("users.urls")),
     path('', include('main.urls')),
