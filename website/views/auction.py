@@ -111,6 +111,12 @@ class AuctionSubscribe(generics.RetrieveUpdateDestroyAPIView):
                 {
                     "message": msg},
                 status=status.HTTP_200_OK)
+        elif auction.auctionOwner == user:
+            msg = 'You are always subscribed to your own auctions'
+            return Response(
+                {
+                    "message": msg},
+                status=status.HTTP_400_BAD_REQUEST)
         else:
             auction.subscribed.add(user)
             msg = f'You are now subscribed to "{auction.title}"'

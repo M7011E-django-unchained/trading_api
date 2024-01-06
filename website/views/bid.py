@@ -71,6 +71,7 @@ def create_bid(request):
     return JsonResponse(retrieved_data, safe=False)
 
 
+@api_view(['GET'])
 def get_all_bids(request):
     url = f'{host}getAllBids'
     response = requests.get(url, headers=bid_get_token_middleware(request))
@@ -78,6 +79,7 @@ def get_all_bids(request):
     return JsonResponse(data, safe=False)
 
 
+@api_view(['GET'])
 def get_one_bid(request, _id):
     url = f'{host}getOneBid/{_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
@@ -85,6 +87,7 @@ def get_one_bid(request, _id):
     return JsonResponse(data, safe=False)
 
 
+@api_view(['GET'])
 def get_all_bids_by_auction_id(request, auction_id):
     url = f'{host}getAllBidsByAuctionId/{auction_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
@@ -92,6 +95,7 @@ def get_all_bids_by_auction_id(request, auction_id):
     return JsonResponse(data, safe=False)
 
 
+@api_view(['GET'])
 def get_all_bids_by_bidder_id(request, bidder_id):
     url = f'{host}getAllBidsByBidderId/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
@@ -99,6 +103,7 @@ def get_all_bids_by_bidder_id(request, bidder_id):
     return JsonResponse(data, safe=False)
 
 
+@api_view(['GET'])
 def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
     url = f'{host}getAllBids/'
     url += f'{auction_id}/{bidder_id}'
@@ -107,6 +112,7 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
     return JsonResponse(data, safe=False)
 
 
+@api_view(['GET'])
 def get_winner_by_auction_id(request, auction_id):
     url = f'{host}getWinnerbyAuctionId/{auction_id}'
     auction = Auction.objects.get(auctionID=auction_id)
@@ -126,6 +132,8 @@ def get_winner_by_auction_id(request, auction_id):
 @csrf_exempt
 @api_view(['POST'])
 def update_one_bid(request, _id):
+    if not request.user.is_staff:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     data = json.loads(request.body)
     bid = {
         "auctionId": data.get('auctionId'),
@@ -143,7 +151,10 @@ def update_one_bid(request, _id):
 
 
 @csrf_exempt
+@api_view(['DELETE'])
 def delete_one_bid(request, _id):
+    if not request.user.is_staff:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}deleteOneBid/{_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -151,7 +162,10 @@ def delete_one_bid(request, _id):
 
 
 @csrf_exempt
+@api_view(['DELETE'])
 def delete_all_bids_by_auction_id(request, auction_id):
+    if not request.user.is_staff:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}deleteAllBidsByAuctionId/{auction_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
     data = response.json()
