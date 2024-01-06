@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'debug_toolbar',
     'django_seed',
+    'django_otp',
+    'django_otp.plugins.otp_totp',
     "website",
     "users",
     'main',
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    'django_otp.middleware.OTPMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
