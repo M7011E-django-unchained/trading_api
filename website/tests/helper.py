@@ -13,7 +13,9 @@ def create_dummy_auctions():
     User.objects.create_user(
         username="auctionOwner2", password="testpassword",
         email="auctionOwner2@example.com")
-
+    for user in User.objects.all():
+        user.is_active = True
+        user.save()
     Category.objects.create(name="Vehicle")
     Subcategory.objects.create(
         category=Category.objects.get(id=1),

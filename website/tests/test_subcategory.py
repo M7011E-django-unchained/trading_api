@@ -20,6 +20,9 @@ class SubcategoryListTest(APITestCase):
             password="staff",
             is_staff=True,
         )
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
 
     def test_get_subcategory(self):
         create_dummy_auctions()

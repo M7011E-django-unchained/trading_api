@@ -14,6 +14,9 @@ class CategoryListTest(APITestCase):
             email="staff@example.com", is_staff=True)
         self.user = User.objects.create_user(
             username="user", password="user", email="user@example.com")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
 
     def test_create_category(self):
         url = reverse("category-list")
@@ -56,6 +59,9 @@ class CategoryDetailTest(APITestCase):
         self.user = User.objects.create_user(
             username="user", password="user", email="user@example.com")
         Category.objects.create(name="test")
+        for user in User.objects.all():
+            user.is_active = True
+            user.save()
 
     def test_get_category(self):
         url = reverse("category-detail", args=["test"])
