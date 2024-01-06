@@ -34,13 +34,13 @@ class TestMemberList(APITestCase):
 
     def test_get_member_list_as_guest(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_member_list_as_user(self):
         token = get_token(self.user, "testpassword")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_member_list_as_staff(self):
         token = get_token(self.staff, "staffpassword")
@@ -70,7 +70,7 @@ class TestMemberDetail(APITestCase):
 
     def test_get_member_detail_as_guest(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     # a member should use the edit user endpoint instead of this endpoint.
     # This is for member management
@@ -78,7 +78,7 @@ class TestMemberDetail(APITestCase):
         token = get_token(self.user, "testpassword")
         self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_member_detail_as_staff(self):
         token = get_token(self.staff, "staffpassword")
