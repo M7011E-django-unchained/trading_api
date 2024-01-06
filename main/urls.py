@@ -10,5 +10,5 @@ urlpatterns = [
     path('auctions/', auctions, name='auctions'),
     path('auctions/<int:auction_id>', show_auction, name='show_auction'),
     path('all_users/', all_users, name='all_users'),
-    path('user/<int:user_id>/', show_user, name='show_user'),
+    path('user_detail/<int:user_id>/', show_user, name='show_user'),
 ]
