@@ -11,6 +11,7 @@ app_name = 'users'
 
 urlpatterns = [
     path('register/', views.RegisterUser.as_view(), name='register'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
     path('update/', views.UpdateUser.as_view(), name='update'),
     path('token/', TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
