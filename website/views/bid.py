@@ -132,7 +132,7 @@ def get_winner_by_auction_id(request, auction_id):
 @csrf_exempt
 @api_view(['POST'])
 def update_one_bid(request, _id):
-    if not request.user.is_staff:
+    if not request.user.is_staff or not request.user.is_superuser:
         return JsonResponse({"message": "Unauthorized"}, status=401)
     data = json.loads(request.body)
     bid = {
@@ -153,7 +153,7 @@ def update_one_bid(request, _id):
 @csrf_exempt
 @api_view(['DELETE'])
 def delete_one_bid(request, _id):
-    if not request.user.is_staff:
+    if not request.user.is_staff or not request.user.is_superuser:
         return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}deleteOneBid/{_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
@@ -164,7 +164,7 @@ def delete_one_bid(request, _id):
 @csrf_exempt
 @api_view(['DELETE'])
 def delete_all_bids_by_auction_id(request, auction_id):
-    if not request.user.is_staff:
+    if not request.user.is_staff or not request.user.is_superuser:
         return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}deleteAllBidsByAuctionId/{auction_id}'
     response = requests.delete(url, headers=bid_get_token_middleware(request))
