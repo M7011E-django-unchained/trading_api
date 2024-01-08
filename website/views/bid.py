@@ -23,6 +23,9 @@ def bid_get_token_middleware(request):
 def create_bid(request):
     data = json.loads(request.body)
 
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
+
     auction_id = data.get('auctionId')
     auction = Auction.objects.get(auctionID=auction_id)
     user = User.objects.get(id=data.get('bidderId'))
@@ -73,6 +76,8 @@ def create_bid(request):
 
 @api_view(['GET'])
 def get_all_bids(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getAllBids'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -81,6 +86,8 @@ def get_all_bids(request):
 
 @api_view(['GET'])
 def get_one_bid(request, _id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getOneBid/{_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -89,6 +96,8 @@ def get_one_bid(request, _id):
 
 @api_view(['GET'])
 def get_all_bids_by_auction_id(request, auction_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getAllBidsByAuctionId/{auction_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -97,6 +106,8 @@ def get_all_bids_by_auction_id(request, auction_id):
 
 @api_view(['GET'])
 def get_all_bids_by_bidder_id(request, bidder_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getAllBidsByBidderId/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
@@ -105,6 +116,8 @@ def get_all_bids_by_bidder_id(request, bidder_id):
 
 @api_view(['GET'])
 def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getAllBids/'
     url += f'{auction_id}/{bidder_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
@@ -114,6 +127,8 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
 
 @api_view(['GET'])
 def get_winner_by_auction_id(request, auction_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getWinnerbyAuctionId/{auction_id}'
     auction = Auction.objects.get(auctionID=auction_id)
     end_time = auction.endTime.strftime("%Y-%m-%d %H:%M:%S")
