@@ -40,6 +40,7 @@ class UserDetailSerializer(ModelSerializer):
         fields = (
             "id",
             "username",
+            'password',
             "first_name",
             "last_name",
             "email",
@@ -47,6 +48,7 @@ class UserDetailSerializer(ModelSerializer):
             "profilePicPath",
             "auctions",
         )
+        extra_kwargs = {'password': {'write_only': True}}
 
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
