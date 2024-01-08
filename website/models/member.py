@@ -24,7 +24,7 @@ User._meta.get_field('email').null = False
 # this sets user as inactive. Used for email verification on registration
 @receiver(pre_save, sender=User)
 def set_new_user_inactive(sender, instance, **kwargs):
-    if instance._state.adding is True:
+    if instance._state.adding and instance.is_superuser is False:
         instance.is_active = False
 
 
