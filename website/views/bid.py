@@ -118,7 +118,7 @@ def get_all_bids_by_auction_id_and_bidder_id(request, auction_id, bidder_id):
     if not request.user.is_authenticated:
         return JsonResponse({"message": "Unauthorized"}, status=401)
     url = f'{host}getAllBids/'
-    url += f'{auction_id}/{bidder_id}'
+    url += f'{bidder_id}/{auction_id}'
     response = requests.get(url, headers=bid_get_token_middleware(request))
     data = response.json()
     return JsonResponse(data, safe=False)
