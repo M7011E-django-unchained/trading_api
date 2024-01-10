@@ -2,7 +2,6 @@ import datetime
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from website.models import Auction

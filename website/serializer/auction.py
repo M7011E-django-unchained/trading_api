@@ -59,6 +59,7 @@ class AuctionCreateSerializer(ModelSerializer):
             "title",
             "auctionOwner",
             "description",
+            "imagePath",
             "subcategory",
             "startingPrice",
             "buyOutPrice",
