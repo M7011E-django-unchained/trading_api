@@ -2,7 +2,6 @@ import datetime
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from website.models import Auction
@@ -28,7 +27,7 @@ def create_bid(request):
 
     auction_id = data.get('auctionId')
     auction = Auction.objects.get(auctionID=auction_id)
-    user = User.objects.get(id=data.get('bidderId'))
+    user = request.user
     bid_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     if bid_time > auction.endTime.strftime("%Y-%m-%d %H:%M:%S"):
